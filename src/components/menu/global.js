@@ -18,8 +18,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import InputBase from '@material-ui/core/InputBase';
-import { fade} from '@material-ui/core/styles';
+import { fade } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+import { itemsMenu } from './itemsMenu';
+import { green } from '@material-ui/core/colors';
+import Icon from '@material-ui/core/Icon';
+import NewWorkOrder from './../pages/newWorkOrder'
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   appBar: {
-      backgroundColor:'#0f2174',
+    backgroundColor: '#0f2174',
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -130,6 +135,7 @@ export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [title, setTitle] = React.useState('')
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -137,6 +143,9 @@ export default function PersistentDrawerLeft() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+  const handleTitle = (_title) => {
+    setTitle(_title);
   };
 
   return (
@@ -158,8 +167,8 @@ export default function PersistentDrawerLeft() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title}  variant="h6" noWrap>
-            Titulo
+          <Typography className={classes.title} variant="h6" noWrap>
+            {title}
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -186,16 +195,17 @@ export default function PersistentDrawerLeft() {
         }}
       >
         <div className={classes.drawerHeader}>
+
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </div>
         <Divider />
         <List>
-          {['Nueva OT', 'Ordenes de trabajo', 'Movimientos', 'Configuraciones','Cerrar sesion'].map((text, index) => (
-            <ListItem button onClick={handleDrawerClose} key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
+          {itemsMenu.map((item, index) => (
+            <ListItem button onClick={handleDrawerClose} key={item.title}>
+              <ListItemIcon><i class="material-icons">{item.icon}</i></ListItemIcon>
+              <ListItemText primary={item.title} />
             </ListItem>
           ))}
         </List>
@@ -215,7 +225,7 @@ export default function PersistentDrawerLeft() {
         })}
       >
         <div className={classes.drawerHeader} />
-        route
+        <NewWorkOrder/>
       </main>
     </div>
   );
