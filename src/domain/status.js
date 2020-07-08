@@ -23,5 +23,14 @@ const  claim= {
     title: 'Reclamo',
     icon: 'check_circle_outline'
 }
-
-export const status = [generated, inProgress, returned, claim,delivered]
+const  claim_delivered= {
+    id:5,
+    title: 'Reclamo entregado',
+    icon: 'check_circle_outline'
+}
+const  claim_returned= {
+    id:6,
+    title: 'Reclamo devuelto',
+    icon: 'check_circle_outline'
+}
+export const status = [generated, returned, claim,delivered,claim_delivered,claim_returned]

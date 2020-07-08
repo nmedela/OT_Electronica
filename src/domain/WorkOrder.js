@@ -11,12 +11,9 @@ export class WorkOrder {
         this.serial_number = null
         this.failure = null
         this.observation = null
-        this.approximate_amount = null
         this.warranty = null
-        this.conclusion = null
         this.final_amount = null
         this.deliver_date = null
-        this.expense = null
-        this.expense_description = null
+        this.cancel=false
     }
 }

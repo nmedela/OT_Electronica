@@ -8,6 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormClient from './../utils/formClient'
 import FormWorkOrder from './../utils/formWorkOrder'
+import FormGenerator from './../utils/formGenerator'
 const styleFormTextField = {
     '& > *': {
         width: '30ch',
@@ -46,8 +47,12 @@ class NewWorkOrder extends React.Component {
                         <FormClient />
                     </Grid>
                     <Grid item xs={12}>
-                        <FormWorkOrder />
+                        <FormWorkOrder new/>
                     </Grid>
+                    <Grid item xs={12}>
+                        <FormGenerator />
+                    </Grid>
+
                 </Grid>
             </div>
         )
