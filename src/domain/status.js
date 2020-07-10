@@ -3,11 +3,11 @@ const generated = {
     title: 'Generado',
     icon: 'create'
 }
-const inProgress = {
-    id:1,
-    title: 'En progreso',
-    icon: 'access_time'
-}
+// const inProgress = {
+//     id:1,
+//     title: 'En progreso',
+//     icon: 'access_time'
+// }
 const returned = {
     id:2,
     title: 'Devuelto',

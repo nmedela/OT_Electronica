@@ -1,14 +1,9 @@
 import 'date-fns';
-import DateFnsUtils from '@date-io/date-fns';
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
-import Icon from '@material-ui/core/Icon';
 import SaveIcon from '@material-ui/icons/Save';
 
 class FormGenerator extends React.Component {
@@ -41,17 +36,6 @@ class FormGenerator extends React.Component {
             '& > *': {
                 width: '30ch',
             },
-        }
-        const styleTextField = {
-            marginTop: '16px',
-            marginLeft: '1px',
-            width: '100%',
-        }
-        const styleTextDisplay = {
-            display: this.state.status == 3 ? "inline-flex" : "none",
-            marginTop: '16px',
-            marginLeft: '1px',
-            width: '100%',
         }
 
         const styleRoot = {

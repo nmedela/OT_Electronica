@@ -19,4 +19,4 @@ const microwave_oven = {
     title: 'Horno microondas',
 }
 
-export const equipments = [tv,sound_system,microwave,oven,microwave]
+export const equipments = [tv,sound_system,microwave,oven,microwave_oven]

@@ -1,14 +1,11 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
-import FormClient from './../utils/formClient'
-import FormWorkOrder from './../utils/formWorkOrder'
-import FormGenerator from './../utils/formGenerator'
 
 const styleRoot = {
     width: '100%',
     flexGrow: 1,
 }
-class NewWorkOrder extends React.Component {
+class Movements extends React.Component {
 
     constructor(props) {
         super(props)
@@ -25,16 +22,10 @@ class NewWorkOrder extends React.Component {
             <div>
 
                 <Grid container justify='center' style={styleRoot} spacing={2} >
+                   
                     <Grid item xs={12}>
-                        <FormClient new/>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormWorkOrder new/>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormGenerator />
-                    </Grid>
-
+                        <div>Movimientos</div>
+                    </Grid>              
                 </Grid>
             </div>
         )
@@ -42,4 +33,4 @@ class NewWorkOrder extends React.Component {
 
 }
 
-export default NewWorkOrder
+export default Movements

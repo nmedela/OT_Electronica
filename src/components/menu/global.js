@@ -15,15 +15,11 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import { itemsMenu } from './itemsMenu';
-import { green } from '@material-ui/core/colors';
-import Icon from '@material-ui/core/Icon';
-import NewWorkOrder from './../pages/newWorkOrder'
+import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom'
 
 const drawerWidth = 240;
 
@@ -69,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 0,
+    width: '100%',
     padding: theme.spacing(3),
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
@@ -146,6 +143,7 @@ export default function PersistentDrawerLeft() {
   };
   const handleTitle = (_title) => {
     setTitle(_title);
+    handleDrawerClose()
   };
 
   return (
@@ -185,48 +183,57 @@ export default function PersistentDrawerLeft() {
           </div>
         </Toolbar>
       </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
+      <Router>
+        <Drawer
+          className={classes.drawer}
+          variant="persistent"
+          anchor="left"
+          open={open}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          <div className={classes.drawerHeader}>
 
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
-          {itemsMenu.map((item, index) => (
-            <ListItem button onClick={handleDrawerClose} key={item.title}>
-              <ListItemIcon><i class="material-icons">{item.icon}</i></ListItemIcon>
-              <ListItemText primary={item.title} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {[].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-        <div className={classes.drawerHeader} />
-        <NewWorkOrder/>
-      </main>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </div>
+          <Divider />
+          <List>
+            {itemsMenu.map((item, index) => (
+              <Link to={`${item.path}`} style={{ color: 'black', textDecoration: 'none' }}>
+                <ListItem button onClick={() => { return handleTitle(item.title) }} key={item.title}>
+                  <ListItemIcon><i class="material-icons">{item.icon}</i></ListItemIcon>
+                  <ListItemText primary={item.title} />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+          <Divider />
+        </Drawer>
+        <main
+          className={clsx(classes.content, {
+            [classes.contentShift]: open,
+          })}
+        >
+          <div className={classes.drawerHeader} />
+          <Switch>
+            <Redirect
+              exact
+              from="/"
+              to="/WO/new" />
+            {
+              itemsMenu.map((item) => {
+                return (<Route
+                  path={`${item.path}`}
+                  render={() => { return item.component }} />)
+              })
+            }
+          </Switch>
+
+        </main>
+      </Router>
     </div>
   );
 }

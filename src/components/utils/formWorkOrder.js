@@ -1,11 +1,9 @@
 import 'date-fns';
-import DateFnsUtils from '@date-io/date-fns';
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import { equipments } from './../../domain/equipments'
@@ -15,10 +13,8 @@ import MomentUtils from '@date-io/moment';
 import Switch from '@material-ui/core/Switch';
 import moment from "moment";
 import 'moment/locale/es'
-import { makeStyles } from '@material-ui/core/styles';
 import {
     MuiPickersUtilsProvider,
-    KeyboardTimePicker,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 
@@ -33,7 +29,7 @@ class FormWorkOrder extends React.Component {
             id: null,
             code: null,
             admission_date: moment.now(),
-            statusValue: 0,
+            status_value: 0,
             statusTitle: null,
             //client_id :null,
             equipment: 0,
@@ -41,7 +37,7 @@ class FormWorkOrder extends React.Component {
             model: null,
             serial_number: null,
             failure: null,
-            statusDate: moment.now(),
+            status_date: moment.now(),
             observation: null,
             warranty: null,
             final_amount: null,
@@ -50,6 +46,7 @@ class FormWorkOrder extends React.Component {
             update: false,
 
         }
+        // this.handleChange = this.handleChange.bind(this)
     }
 
     componentWillMount() {
@@ -88,7 +85,7 @@ class FormWorkOrder extends React.Component {
             id: wo.id,
             code: wo.code,
             admission_date: wo.admission_date,
-            statusValue: wo.status,
+            status_value: wo.status,
             equipment: wo.equipment,
             brand: wo.brand,
             model: wo.model,
@@ -97,6 +94,7 @@ class FormWorkOrder extends React.Component {
             warranty: wo.warranty,
             final_amount: wo.final_amount,
         })
+        // this.handleChange = this.handleChange.bind(this);
         return null
     }
     handleAdmissionDateChange = (date) => {
@@ -105,7 +103,7 @@ class FormWorkOrder extends React.Component {
     }
     handleStatusDateChange = (date) => {
         console.log(date)
-        this.setState({ statusDate: date })
+        this.setState({ status_date: date })
     }
     handleUpdateChange = (event) => {
         console.log(event)
@@ -117,8 +115,14 @@ class FormWorkOrder extends React.Component {
         console.log('cambio a ', this.state.equipment)
     };
     handleStatusChange = (event) => {
-        this.setState({ statusValue: event.target.value })
+        this.setState({ status_value: event.target.value })
         console.log(event)
+    };
+    handleInputChange = (event) => {
+        let name = event.target.name
+        this.setState({
+            ...this.state, [name]: event.target.value
+        })
     };
 
     insertWorkOrder = () => {
@@ -137,13 +141,13 @@ class FormWorkOrder extends React.Component {
             width: '100%',
         }
         const styleTextDisplay = {
-            display: idTypeChange.some(v => v == this.state.statusValue) || this.state.update ? "inline-flex" : "none",
+            display: idTypeChange.some(v => v === this.state.status_value) || this.state.update ? "inline-flex" : "none",
             marginTop: '16px',
             marginLeft: '1px',
             width: '100%',
         }
         const styleTextDisplayFinish = {
-            display: idTypeDelivery.some(v => v == this.state.statusValue) || this.state.update ? "inline-flex" : "none",
+            display: idTypeDelivery.some(v => v === this.state.status_value) || this.state.update ? "inline-flex" : "none",
             marginTop: '16px',
             marginLeft: '1px',
             width: '100%',
@@ -187,8 +191,8 @@ class FormWorkOrder extends React.Component {
                             <Select
                                 style={styleTextField}
                                 labelId="lblStatus"
-                                id="status"
-                                value={this.state.statusValue}
+                                name="status_value"
+                                value={this.state.status_value}
                                 onChange={this.handleStatusChange}
                                 label="Estado"
                             >
@@ -207,7 +211,6 @@ class FormWorkOrder extends React.Component {
                             <Select
                                 style={styleTextField}
                                 labelId="lblEquipment"
-                                id="equipment"
                                 disabled={!this.props.new && !this.state.update}
                                 value={this.state.equipment}
                                 onChange={this.handleEquipmentChange}
@@ -224,23 +227,51 @@ class FormWorkOrder extends React.Component {
                             </Select>
                         </Grid>
                         <Grid item xs={12} sm={2}>
-                            <TextField style={styleTextField} id="brand" label="Marca" disabled={!this.props.new && !this.state.update} value={this.state.brand} variant="outlined" />
+                            <TextField
+                                style={styleTextField}
+                                id='brand'
+                                name='brand'
+                                label="Marca"
+                                onChange={this.handleInputChange}
+                                disabled={!this.props.new && !this.state.update}
+                                value={this.state.brand}
+                                variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={3}>
-                            <TextField style={styleTextField} id="model" label="Modelo" disabled={!this.props.new && !this.state.update} value={this.state.model} variant="outlined" />
+                            <TextField style={styleTextField}
+                                onChange={this.handleInputChange}
+                                name="model" label="Modelo"
+
+                                disabled={!this.props.new && !this.state.update}
+                                value={this.state.model} variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={5}>
-                            <TextField style={styleTextField} id="serial_number" label="Nro Serie" disabled={!this.props.new && !this.state.update} value={this.state.serial_number} variant="outlined" />
+                            <TextField
+                                style={styleTextField}
+                                name="serial_number"
+                                label="Nro Serie"
+                                onChange={this.handleInputChange}
+                                disabled={!this.props.new && !this.state.update}
+                                value={this.state.serial_number}
+                                variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={9}>
-                            <TextField style={styleTextField} multiline rowsMax={2} id="failure" disabled={!this.props.new && !this.state.update} label="Falla" value={this.state.failure} variant="outlined" />
+                            <TextField
+                                style={styleTextField}
+                                multiline rowsMax={2}
+                                name="failure"
+                                disabled={!this.props.new && !this.state.update}
+                                label="Falla"
+                                onChange={this.handleInputChange}
+                                value={this.state.failure}
+                                variant="outlined" />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={3} style={{ display: this.props.new ? 'none' : 'inline-block' }}>
                             <InputLabel shrink id="lblUpdate">Editar</InputLabel>
                             <Switch
                                 checked={this.state.update}
                                 onChange={this.handleUpdateChange}
-                                disabled= {this.props.new}
+                                disabled={this.props.new}
                                 name="update"
                                 color="primary"
                             />
@@ -263,18 +294,23 @@ class FormWorkOrder extends React.Component {
                             />
                         </Grid> */}
                         <Grid item xs={12} sm={9}>
-                            <TextField style={styleTextField} multiline rowsMax={3} id="observation" label="Observaciones" variant="outlined" />
+                            <TextField
+                                style={styleTextField}
+                                multiline rowsMax={3}
+                                onChange={this.handleInputChange}
+                                name="observation"
+                                label="Observaciones"
+                                variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={3}>
                             <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale("es")}>
                                 <KeyboardDatePicker
                                     style={styleTextDisplay}
                                     margin="normal"
-                                    id="status_date"
                                     label={"Fecha"}
-                                    format="DD/MM/yyyy"
-                                    value={this.state.statusDate}
                                     onChange={this.handleStatusDateChange}
+                                    format="DD/MM/yyyy"
+                                    value={this.state.status_date}
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
                                     }}
@@ -286,6 +322,7 @@ class FormWorkOrder extends React.Component {
                                 style={styleTextDisplayFinish}
                                 id="warranty"
                                 label="Garantia"
+                                onChange={this.handleInputChange}
                                 disabled={this.state.warranty && !this.state.update}
                                 value={this.state.warranty}
                                 variant="outlined"
@@ -297,8 +334,9 @@ class FormWorkOrder extends React.Component {
                         <Grid item xs={12} sm={4}>
                             <TextField
                                 style={styleTextDisplayFinish}
-                                id="final_amount"
+                                name="final_amount"
                                 label="Importe final"
+                                onChange={this.handleInputChange}
                                 value={this.state.final_amount}
                                 variant="outlined"
                                 type='number'
