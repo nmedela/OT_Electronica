@@ -22,14 +22,7 @@ class FormGenerator extends React.Component {
         this.setState({ selectedDate: date })
     }
 
-    handleEquipmentChange = (event) => {
-        this.setState({ equipment: event.target.value })
-        console.log('cambio a ', this.state.equipment)
-    };
-    handleStatusChange = (event) => {
-        this.setState({ status: event.target.value })
-        console.log('cambio a ', this.state.status)
-    };
+
 
     render() {
         const styleFormTextField = {

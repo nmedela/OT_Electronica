@@ -12,6 +12,10 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import MomentUtils from '@date-io/moment';
 import Switch from '@material-ui/core/Switch';
 import moment from "moment";
+import FormClient from './../utils/formClient'
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
+import SaveIcon from '@material-ui/icons/Save';
 import 'moment/locale/es'
 import {
     MuiPickersUtilsProvider,
@@ -28,10 +32,10 @@ class FormWorkOrder extends React.Component {
         this.state = {
             id: null,
             code: null,
+            client_id: null,
             admission_date: moment.now(),
             status_value: 0,
             statusTitle: null,
-            //client_id :null,
             equipment: 0,
             brand: null,
             model: null,
@@ -44,16 +48,20 @@ class FormWorkOrder extends React.Component {
             isLoading: true,
             cancel: false,
             update: false,
+            generate: false,
+            new: this.props.new,
 
         }
         // this.handleChange = this.handleChange.bind(this)
+        this.insertWorkOrder = this.insertWorkOrder.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     componentWillMount() {
         if (!this.props.new) {
             let wo = this.getWorkOrder(this.props.idWO)
             this.setFields(wo)
-            this.setState({ isLoading: false })
+            this.setState({ new: false, isLoading: false })
             console.log("inició", this.state)
             // .then((res) => {
             //     return this.setFields(res)
@@ -68,7 +76,7 @@ class FormWorkOrder extends React.Component {
             id: 1,
             code: 'Nnco',
             admission_date: moment.now(),
-            client_id: 1,
+            client_id: 0,
             equipment: 1,
             brand: 'Sony',
             model: 'abd321',
@@ -84,6 +92,7 @@ class FormWorkOrder extends React.Component {
         this.setState({
             id: wo.id,
             code: wo.code,
+            client_id: wo.client_id,
             admission_date: wo.admission_date,
             status_value: wo.status,
             equipment: wo.equipment,
@@ -124,9 +133,14 @@ class FormWorkOrder extends React.Component {
             ...this.state, [name]: event.target.value
         })
     };
-
-    insertWorkOrder = () => {
-
+    handleSubmit = () => {
+        this.setState({
+            generate: true
+        })
+    }
+    insertWorkOrder = (client_id) => {
+        console.log("Se generó este id de cliente ", client_id)
+        //TODO generar work order
     }
 
     render() {
@@ -163,6 +177,11 @@ class FormWorkOrder extends React.Component {
             width: '100%',
             display: 'visible'
         }
+        const styleButton = {
+            // width: '100%',
+            flexGrow: 1,
+            margin: '10px'
+        }
         if (this.state.isLoading) {
             return <div>Cargando</div>
         }
@@ -170,7 +189,10 @@ class FormWorkOrder extends React.Component {
             <form style={styleFormTextField} noValidate autoComplete="off">
                 <Paper style={stylePaper}>
                     <Grid container justify='center' style={styleRoot} spacing={2} >
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12}>
+                            <FormClient new={this.state.new} generate={this.state.generate} onClientInsert={this.insertWorkOrder} id={this.state.client_id} />
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
                             <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale("es")}>
                                 <KeyboardDatePicker
                                     margin="normal"
@@ -186,26 +208,6 @@ class FormWorkOrder extends React.Component {
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <InputLabel shrink id="lblStatus">Estado</InputLabel>
-                            <Select
-                                style={styleTextField}
-                                labelId="lblStatus"
-                                name="status_value"
-                                value={this.state.status_value}
-                                onChange={this.handleStatusChange}
-                                label="Estado"
-                            >
-
-                                {status.map((status) =>
-                                    (
-                                        <MenuItem value={status.id} >{status.title}</MenuItem>
-                                    )
-
-                                )}
-                            </Select>
-                        </Grid>
-
                         <Grid item xs={12} sm={2}>
                             <InputLabel shrink id="lblEquipment">Equipo</InputLabel>
                             <Select
@@ -245,7 +247,7 @@ class FormWorkOrder extends React.Component {
                                 disabled={!this.props.new && !this.state.update}
                                 value={this.state.model} variant="outlined" />
                         </Grid>
-                        <Grid item xs={12} sm={5}>
+                        <Grid item xs={12} sm={4}>
                             <TextField
                                 style={styleTextField}
                                 name="serial_number"
@@ -255,7 +257,7 @@ class FormWorkOrder extends React.Component {
                                 value={this.state.serial_number}
                                 variant="outlined" />
                         </Grid>
-                        <Grid item xs={12} sm={9}>
+                        <Grid item xs={12} sm={8}>
                             <TextField
                                 style={styleTextField}
                                 multiline rowsMax={2}
@@ -276,23 +278,6 @@ class FormWorkOrder extends React.Component {
                                 color="primary"
                             />
                         </Grid>
-                        {/* <Grid item xs={12} sm={4}>
-                            <TextField
-                            style={styleTextField}
-                            id="approximate_amount"
-                            label="Importe Aproximado"
-                            variant="outlined"
-                                type='number'
-                                min="0"
-                                InputProps={{
-                                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                    type: 'number',
-                                    inputProps: {
-                                        min: '0',
-                                    }
-                                }}
-                            />
-                        </Grid> */}
                         <Grid item xs={12} sm={9}>
                             <TextField
                                 style={styleTextField}
@@ -316,6 +301,25 @@ class FormWorkOrder extends React.Component {
                                     }}
                                 />
                             </MuiPickersUtilsProvider>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <InputLabel shrink id="lblStatus">Estado</InputLabel>
+                            <Select
+                                style={styleTextField}
+                                labelId="lblStatus"
+                                name="status_value"
+                                value={this.state.status_value}
+                                onChange={this.handleStatusChange}
+                                label="Estado"
+                            >
+
+                                {status.map((status) =>
+                                    (
+                                        <MenuItem value={status.id} >{status.title}</MenuItem>
+                                    )
+
+                                )}
+                            </Select>
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -350,6 +354,32 @@ class FormWorkOrder extends React.Component {
                                 }}
                             />
                         </Grid>
+                        <Paper style={stylePaper}>
+                            <Grid container alignItems='center' justify='center' style={styleRoot} spacing={2} >
+                                <Grid item xs={6} sm={2} >
+                                    <Button
+                                        style={styleButton}
+                                        variant="contained"
+                                        color="secondary"
+                                        startIcon={<DeleteIcon />}
+                                    >
+                                        Limpiar
+                        </Button>
+                                </Grid>
+                                <Grid item xs={6} sm={2}>
+                                    <Button
+                                        style={styleButton}
+                                        variant="contained"
+                                        color="primary"
+                                        size="large"
+                                        onClick={this.handleSubmit}
+                                        startIcon={<SaveIcon />}
+                                    >
+                                        Generar
+                            </Button>
+                                </Grid>
+                            </Grid>
+                        </Paper>
                     </Grid>
                 </Paper>
             </form>

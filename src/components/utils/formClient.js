@@ -8,6 +8,9 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Switch from '@material-ui/core/Switch';
 import InputLabel from '@material-ui/core/InputLabel';
+import { ClientRepository } from './../../services/repository'
+
+// const clientRespository = new ClientRepository()
 
 class FormClient extends React.Component {
 
@@ -16,23 +19,27 @@ class FormClient extends React.Component {
         this.state = {
             id: null,
             name: null,
-            cel: null,
-            cel2: null,
+            tel: null,
+            tel2: null,
             mail: null,
             mail2: null,
             direction: null,
             location: null,
             description: null,
             update: false,
-            isLoading: true
+            isLoading: true,
         }
+        this.handleGenerateClient = this.handleGenerateClient.bind(this)
     }
 
     componentWillMount() {
         if (!this.props.new) {
-            let client = this.getClient(this.props.id)
-            this.setFieldsClient(client)
-
+            console.log("Le pido este id ", this.props.id)
+            this.getClient(this.props.id)
+                .then((res) => {
+                    console.log("trae esta info ", res)
+                    this.setFieldsClient(res)
+                })
             // this.getClient(this.props.idClient)
             // .then((res)=>{
             //     this.setFieldsClient(res)
@@ -44,18 +51,27 @@ class FormClient extends React.Component {
         }
         this.setState({ isLoading: false })
     }
+    componentWillReceiveProps(props) {
+        if (props.generate) {
+            console.log('generate está en, ', props.generate)
+            this.handleGenerateClient()
+        }
+    }
 
     getClient(id) {
-        return {
-            id: 1,
-            name: 'Nico',
-            tel: 12343234,
-            tel2: 431276,
-            mail: 'nicolas.medela@algo.com',
-            mail2: 'nicolas.medela2@algo2.com',
-            direction: 'Guzman 3327',
-            location: 'Ricardo Rojas'
-        }
+
+        let client = ClientRepository.getById(id)
+        return client
+        // {
+        //     id: 1,
+        //     name: 'Nico',
+        //     tel: 12343234,
+        //     tel2: 431276,
+        //     mail: 'nicolas.medela@algo.com',
+        //     mail2: 'nicolas.medela2@algo2.com',
+        //     direction: 'Guzman 3327',
+        //     location: 'Ricardo Rojas'
+        // }
     }
     setFieldsClient(client) {
         this.setState({
@@ -74,7 +90,7 @@ class FormClient extends React.Component {
 
     }
     handleTextChange = (event) => {
-        console.log("Tiro el evento",event,event.target)
+        console.log("Tiro el evento", event, event.target)
         this.setState({
             ...this.state, [event.target.name]: event.target.value
         })
@@ -82,6 +98,57 @@ class FormClient extends React.Component {
     handleUpdateChange = (event) => {
         console.log(event)
         this.setState({ update: event.target.checked })
+    }
+    handleGenerateClient = () => {
+        let id = this.state.id
+        console.log("asi esta el id cliente ", this.state.id)
+        console.log("asi esta el new del cliente ", this.props.new)
+        if (id === null) {
+            this.insertClient()
+                .then((res) => {
+                    console.log("creo el wachi ", res)
+                    this.props.onClientInsert(res.id)
+                })
+            // TODO envío
+        } else {
+            if (this.state.update) {
+                id = 1 //recupero mismo id
+                this.updatetClient()// TODO update
+                .then((res) => {
+                    console.log("se modificó ", res)
+                    this.props.onClientInsert(res.id)
+                })
+            } else {
+                this.props.onClientInsert(id)
+            }
+        }
+    }
+
+    insertClient = () => {
+        let client = {
+            id: this.state.id,
+            name: this.state.name,
+            tel: this.state.tel,
+            tel2: this.state.tel2,
+            mail: this.state.mail,
+            mail2: this.state.mail2,
+            direction: this.state.direction,
+            location: this.state.location,
+        }
+        return ClientRepository.create(client)
+    }
+    updatetClient = () => {
+        let client = {
+            id: this.state.id,
+            name: this.state.name,
+            tel: this.state.tel,
+            tel2: this.state.tel2,
+            mail: this.state.mail,
+            mail2: this.state.mail2,
+            direction: this.state.direction,
+            location: this.state.location,
+        }
+        return ClientRepository.update(client)
     }
     render() {
         const styleFormTextField = {

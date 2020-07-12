@@ -112,7 +112,7 @@ class WorkOrders extends React.Component {
                                 variant="outlined" />
                         </Grid>
                         <Grid item xs={12}>
-                            <ListWorkOrder />
+                            <ListWorkOrder  />
                         </Grid>
                     </Grid>
                 </Paper>

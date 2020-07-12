@@ -28,6 +28,10 @@ class MyItem extends React.Component {
             open: !this.state.open
         })
     }
+
+    getWorkOrderByFilter=()=>{
+    //TODO HACER BUSQUEDA POR FILTRO PARA LLENAR LA LISTA
+    }
     render() {
 
         return (
@@ -53,7 +57,7 @@ class MyItem extends React.Component {
                     </ListItemSecondaryAction>
                 </ListItem>
                 <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-                    <FormWorkOrder />
+                    <FormWorkOrder id={1} />
                 </Collapse>
             </div>
 

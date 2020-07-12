@@ -3,7 +3,7 @@ export class WorkOrder {
         this.id = null
         this.code = null
         this.admission_date = null
-        this.status = null
+        this.last_status = null
         this.client_id = null
         this.equipment = null
         this.brand = null
