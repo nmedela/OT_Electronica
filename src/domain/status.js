@@ -1,7 +1,8 @@
 const generated = {
     id:0,
     title: 'Generado',
-    icon: 'create'
+    icon: 'access_time',
+    color:'orange'
 }
 // const inProgress = {
 //     id:1,
@@ -11,26 +12,31 @@ const generated = {
 const returned = {
     id:2,
     title: 'Devuelto',
-    icon: 'no_interested'
+    icon: 'close',
+    color:'red',
 }
 const delivered = {
     id:3,
     title: 'Entregado',
-    icon: 'check_circle_outline'
+    icon: 'check',
+    color:'green',
 }
 const  claim= {
     id:4,
     title: 'Reclamo',
-    icon: 'check_circle_outline'
+    icon: 'error_outline',
+    color:'orange',
 }
 const  claim_delivered= {
     id:5,
     title: 'Reclamo entregado',
-    icon: 'check_circle_outline'
+    icon: 'done_outline',
+    color:'green',
 }
 const  claim_returned= {
     id:6,
     title: 'Reclamo devuelto',
-    icon: 'check_circle_outline'
+    icon: 'highlight_off',
+    color:'brown',
 }
 export const status = [generated, returned, claim,delivered,claim_delivered,claim_returned]

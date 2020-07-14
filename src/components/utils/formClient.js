@@ -17,72 +17,54 @@ class FormClient extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            id: null,
-            name: null,
-            tel: null,
-            tel2: null,
-            mail: null,
-            mail2: null,
-            direction: null,
-            location: null,
-            description: null,
+            client:
+            {
+                id: null,
+                name: null,
+                tel: null,
+                tel2: null,
+                mail: null,
+                mail2: null,
+                direction: null,
+                location: null,
+                description: null,
+            },
             update: false,
-            isLoading: true,
+            isLoading: false,
         }
         this.handleGenerateClient = this.handleGenerateClient.bind(this)
     }
-
     componentWillMount() {
+        //Se pasan las props new y id
+        //Si existe new, se crean los campos vacios para poder agregar un cliente.
+        //si no es new, se toma la props id, para buscarlo en la base y traer la info
         if (!this.props.new) {
+            this.setState({ isLoading: true })
             console.log("Le pido este id ", this.props.id)
             this.getClient(this.props.id)
-                .then((res) => {
-                    console.log("trae esta info ", res)
-                    this.setFieldsClient(res)
+            .then((res) => {
+                console.log("trae esta info el getById ", res)
+                this.setFieldsClient(res)
+                this.setState({ isLoading: false })
                 })
-            // this.getClient(this.props.idClient)
-            // .then((res)=>{
-            //     this.setFieldsClient(res)
-            //     .then(()=>{
-            //         this.setState({isLoading:false})
-            //     })
-            // })
-
         }
-        this.setState({ isLoading: false })
     }
     componentWillReceiveProps(props) {
+        //Cuando el componente padre le dice que se tiene que generar, se lo dice por props
+        //SeCuando termina de generar al cliente (Sea guardarlo o editarlo), le pasa el id correspondiente, para que
+        //el padre pueda guardarlo como referancia
         if (props.generate) {
-            console.log('generate está en, ', props.generate)
+            // console.log('generate está en, ', props.generate)
             this.handleGenerateClient()
         }
     }
-
     getClient(id) {
-
         let client = ClientRepository.getById(id)
         return client
-        // {
-        //     id: 1,
-        //     name: 'Nico',
-        //     tel: 12343234,
-        //     tel2: 431276,
-        //     mail: 'nicolas.medela@algo.com',
-        //     mail2: 'nicolas.medela2@algo2.com',
-        //     direction: 'Guzman 3327',
-        //     location: 'Ricardo Rojas'
-        // }
     }
     setFieldsClient(client) {
         this.setState({
-            id: client.id,
-            name: client.name,
-            tel: client.tel,
-            tel2: client.tel2,
-            mail: client.mail,
-            mail2: client.mail2,
-            direction: client.direction,
-            location: client.location,
+            client
         })
         return null
     }
@@ -90,34 +72,29 @@ class FormClient extends React.Component {
 
     }
     handleTextChange = (event) => {
-        console.log("Tiro el evento", event, event.target)
+        let client = this.state.client
+        client[event.target.name] = event.target.value
         this.setState({
-            ...this.state, [event.target.name]: event.target.value
+            ...this.state,
+            client
         })
     }
     handleUpdateChange = (event) => {
-        console.log(event)
         this.setState({ update: event.target.checked })
     }
     handleGenerateClient = () => {
-        let id = this.state.id
-        console.log("asi esta el id cliente ", this.state.id)
-        console.log("asi esta el new del cliente ", this.props.new)
+        let id = this.state.client.id
         if (id === null) {
             this.insertClient()
                 .then((res) => {
-                    console.log("creo el wachi ", res)
                     this.props.onClientInsert(res.id)
                 })
-            // TODO envío
         } else {
             if (this.state.update) {
-                id = 1 //recupero mismo id
-                this.updatetClient()// TODO update
-                .then((res) => {
-                    console.log("se modificó ", res)
-                    this.props.onClientInsert(res.id)
-                })
+                this.updatetClient()
+                    .then((res) => {
+                        this.props.onClientInsert(res.id)
+                    })
             } else {
                 this.props.onClientInsert(id)
             }
@@ -125,30 +102,10 @@ class FormClient extends React.Component {
     }
 
     insertClient = () => {
-        let client = {
-            id: this.state.id,
-            name: this.state.name,
-            tel: this.state.tel,
-            tel2: this.state.tel2,
-            mail: this.state.mail,
-            mail2: this.state.mail2,
-            direction: this.state.direction,
-            location: this.state.location,
-        }
-        return ClientRepository.create(client)
+        return ClientRepository.create(this.state.client)
     }
     updatetClient = () => {
-        let client = {
-            id: this.state.id,
-            name: this.state.name,
-            tel: this.state.tel,
-            tel2: this.state.tel2,
-            mail: this.state.mail,
-            mail2: this.state.mail2,
-            direction: this.state.direction,
-            location: this.state.location,
-        }
-        return ClientRepository.update(client)
+        return ClientRepository.update(this.state.client)
     }
     render() {
         const styleFormTextField = {
@@ -169,6 +126,7 @@ class FormClient extends React.Component {
             marginTop: '20px',
             width: '100%',
         }
+        const { client } = this.state
 
         if (this.state.isLoading) {
             return (
@@ -178,8 +136,8 @@ class FormClient extends React.Component {
             )
         }
         return (
-            <form style={styleFormTextField} noValidate autoComplete="off">
-                <Paper style={stylePaper}>
+            <form style={stylePaper} noValidate autoComplete="off">
+                {/* <Paper style={stylePaper}> */}
                     <Grid container justify='center' style={styleRoot} spacing={1} >
                         <Grid item xs={12} sm={4}>
                             <AccordionSummary
@@ -190,7 +148,7 @@ class FormClient extends React.Component {
                                     style={styleTextField}
                                     id="name"
                                     name="name"
-                                    value={this.state.name}
+                                    value={client.name}
                                     onChange={this.handleTextChange}
                                     disabled={!this.state.update && !this.props.new}
                                     label="Señor/a"
@@ -198,7 +156,7 @@ class FormClient extends React.Component {
                             </AccordionSummary>
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Accordion>
+                            <Accordion style={{display:'inline'}}>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
                                     aria-controls="panel1a-content"
@@ -209,7 +167,7 @@ class FormClient extends React.Component {
                                         id="tel"
                                         label="Telefono"
                                         name="tel"
-                                        value={this.state.tel}
+                                        value={client.tel}
                                         onChange={this.handleTextChange}
                                         disabled={!this.state.update && !this.props.new}
                                         variant="outlined"
@@ -221,7 +179,7 @@ class FormClient extends React.Component {
                                         id="tel2"
                                         label="Telefono 2"
                                         name="tel2"
-                                        value={this.state.tel2}
+                                        value={client.tel2}
                                         onChange={this.handleTextChange}
                                         disabled={!this.state.update && !this.props.new}
                                         variant="outlined"
@@ -230,7 +188,7 @@ class FormClient extends React.Component {
                             </Accordion>
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Accordion>
+                            <Accordion style={{display:'inline'}}>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
                                     aria-controls="panel1a-content"
@@ -241,7 +199,7 @@ class FormClient extends React.Component {
                                         id="mail"
                                         label="Mail"
                                         name="mail"
-                                        value={this.state.mail}
+                                        value={client.mail}
                                         onChange={this.handleTextChange}
                                         disabled={!this.state.update && !this.props.new}
                                         variant="outlined" />
@@ -253,7 +211,7 @@ class FormClient extends React.Component {
                                         label="Mail 2"
                                         name="mail2"
                                         onChange={this.handleTextChange}
-                                        value={this.state.mail2}
+                                        value={client.mail2}
                                         disabled={!this.state.update && !this.props.new}
                                         variant="outlined" />
                                 </AccordionDetails>
@@ -268,7 +226,7 @@ class FormClient extends React.Component {
                                 label="Dirección"
                                 name="direction"
                                 onChange={this.handleTextChange}
-                                value={this.state.direction}
+                                value={client.direction}
                                 disabled={!this.state.update && !this.props.new}
                                 variant="outlined" />
                         </Grid>
@@ -279,7 +237,7 @@ class FormClient extends React.Component {
                                 label="Ciudad"
                                 name="location"
                                 onChange={this.handleTextChange}
-                                value={this.state.location}
+                                value={client.location}
                                 disabled={!this.state.update && !this.props.new}
                                 variant="outlined" />
                         </Grid>
@@ -294,7 +252,7 @@ class FormClient extends React.Component {
                             />
                         </Grid>
                     </Grid>
-                </Paper>
+                {/* </Paper> */}
             </form>
         )
     }

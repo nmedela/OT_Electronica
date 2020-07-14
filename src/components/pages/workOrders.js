@@ -14,6 +14,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
+import { WorkOrderRepository } from '../../services/repository';
 
 const statusList = [{ id: -1, title: "Todos" }, ...status]
 const styleTextField = {
@@ -38,9 +39,22 @@ class WorkOrders extends React.Component {
             filter_status: -1,
             filter_date: moment.now(),
             filter_search: "",
+            workOrders: [],
             isLoading: true
         }
-    } resetFilter = () => {
+    }
+    componentWillMount() {
+        //Aca está bueno traer una vista en vez de todas las ordenes, la vista tendría informacion 
+        //basica para mostrar en la list
+        this.getWorkOrders()
+            .then((res) => {
+                this.setState({
+                    workOrders: res,
+                    isLoading: false
+                })
+            })
+    }
+    resetFilter = () => {
 
     }
     handleSearchChange = (event) => {
@@ -61,8 +75,17 @@ class WorkOrders extends React.Component {
     handleChange = (event) => {
         console.log('cambio')
     };
+    getWorkOrders = () => {
+        return WorkOrderRepository.getAll()
+    }
     render() {
-
+        if (this.state.isLoading) {
+            return (
+                <div>
+                    cargando
+                </div>
+            )
+        }
         return (
             <div>
                 <Paper style={stylePaper}>
@@ -112,7 +135,7 @@ class WorkOrders extends React.Component {
                                 variant="outlined" />
                         </Grid>
                         <Grid item xs={12}>
-                            <ListWorkOrder  />
+                            <ListWorkOrder workOrders={this.state.workOrders} />
                         </Grid>
                     </Grid>
                 </Paper>

@@ -4,7 +4,6 @@ export class History {
         this.id_wo = null
         this.date_status = null
         this.id_status = null
-        this.date_status = null
         this.observation = null
     }
 }

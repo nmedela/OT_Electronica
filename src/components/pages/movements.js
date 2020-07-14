@@ -1,5 +1,7 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
+import FormClient from './../utils/formClient'
+import FormWorkOrder from './../utils/formWorkOrder'
 
 const styleRoot = {
     width: '100%',
@@ -24,7 +26,7 @@ class Movements extends React.Component {
                 <Grid container justify='center' style={styleRoot} spacing={2} >
                    
                     <Grid item xs={12}>
-                        <div>Movimientos</div>
+                        <div><FormWorkOrder new/></div>
                     </Grid>              
                 </Grid>
             </div>

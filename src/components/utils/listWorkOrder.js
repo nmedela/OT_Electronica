@@ -8,10 +8,17 @@ class ListWorkOrders extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            workOrders: null,
             isLoading: true
         }
     }
-   
+    componentWillMount() {
+        console.log("Esto tiene que haber en las props ", this.props)
+        this.setState({
+            workOrders: this.props.workOrders,
+            isLoading: false
+        })
+    }
     handleChange = (event) => {
         console.log('cambio')
     };
@@ -32,13 +39,18 @@ class ListWorkOrders extends React.Component {
         return (
             <div>
                 <Grid container justify='center' style={styleRoot} spacing={2} >
-                   
+
                     <Grid item xs={12} sm={12}>
 
                         <List dense>
-                            {this.generate(
-                                <MyItem />
-                            )}
+                            {/* {this.generate( */}
+                            {!this.state.isLoading && this.state.workOrders.map((wo) => {
+                                console.log("Esto tiene que haber en la wo ", wo)
+                                return <MyItem id={wo.id} onWO={wo} status={wo.last_status} />
+                            }
+                            )
+                            }
+                            {/* )} */}
                         </List>
                     </Grid>
                 </Grid>

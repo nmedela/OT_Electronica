@@ -16,40 +16,56 @@ import FormClient from './../utils/formClient'
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
+import Snackbar from '@material-ui/core/Snackbar';
+import { Alert } from '@material-ui/lab';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { Redirect } from 'react-router-dom'
 import 'moment/locale/es'
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
+import { WorkOrderRepository } from './../../services/repository'
+import { HistoryRepository } from './../../services/repository'
+
 
 const idTypeDelivery = [3]
 const idTypeChange = [1, 2, 3, 4, 5, 6]
 
+
 class FormWorkOrder extends React.Component {
 
-    constructor(props) {
-        super(props)
+    constructor(props, context) {
+        super(props, context)
         this.state = {
-            id: null,
-            code: null,
-            client_id: null,
-            admission_date: moment.now(),
-            status_value: 0,
+            wo: {
+                id: null,
+                code: null,
+                client_id: null,
+                admission_date: moment.now(),
+                equipment: 0,
+                brand: null,
+                model: null,
+                serial_number: null,
+                failure: null,
+                last_status: 0,
+                deliver_date: null, //Acordarse de que si la orden está en reclamo, debe seguirle estado reclamo devuelto, reclamo entregado
+                warranty: null,
+                final_amount: null,
+                cancel: false,
+            },
+            // status_value: 0,
             statusTitle: null,
-            equipment: 0,
-            brand: null,
-            model: null,
-            serial_number: null,
-            failure: null,
             status_date: moment.now(),
             observation: null,
-            warranty: null,
-            final_amount: null,
-            isLoading: true,
-            cancel: false,
+            isLoading: false,
+            inProgress:false,
             update: false,
             generate: false,
             new: this.props.new,
+            snackBarOpen: false,
+            messageResult: null,
 
         }
         // this.handleChange = this.handleChange.bind(this)
@@ -59,56 +75,48 @@ class FormWorkOrder extends React.Component {
 
     componentWillMount() {
         if (!this.props.new) {
-            let wo = this.getWorkOrder(this.props.idWO)
-            this.setFields(wo)
-            this.setState({ new: false, isLoading: false })
-            console.log("inició", this.state)
+            this.setState({ isLoading: true, inProgress:true })
+            this.getWorkOrder(this.props.id)
+                .then((res) => {
+                    console.log("esto trae la wo, ", res)
+                    this.setFields(res)
+                    console.log("inició", this.state)
+                    this.setState({ new: false, isLoading: false, inProgress:false })
+                })
             // .then((res) => {
             //     return this.setFields(res)
             // }).then((res) => {
             //     this.setState({ isLoading: false })
             // })
         }
-        this.setState({ isLoading: false })
     }
     getWorkOrder = (id) => {
-        return {
-            id: 1,
-            code: 'Nnco',
-            admission_date: moment.now(),
-            client_id: 0,
-            equipment: 1,
-            brand: 'Sony',
-            model: 'abd321',
-            serial_number: '98761234',
-            failure: "Fallo la fuente",
-            status: 2,
-            warranty: null,
-            final_amount: 5600,
-            cancel: false,
-        }
+        return WorkOrderRepository.getById(id)
     }
     setFields = (wo) => {
         this.setState({
-            id: wo.id,
-            code: wo.code,
-            client_id: wo.client_id,
-            admission_date: wo.admission_date,
-            status_value: wo.status,
-            equipment: wo.equipment,
-            brand: wo.brand,
-            model: wo.model,
-            serial_number: wo.serial_number,
-            failure: wo.failure,
-            warranty: wo.warranty,
-            final_amount: wo.final_amount,
+            wo
+            // id: wo.id,
+            // code: wo.code,
+            // client_id: wo.client_id,
+            // admission_date: wo.admission_date,
+            // status_value: wo.status,
+            // equipment: wo.equipment,
+            // brand: wo.brand,
+            // model: wo.model,
+            // serial_number: wo.serial_number,
+            // failure: wo.failure,
+            // warranty: wo.warranty,
+            // final_amount: wo.final_amount,
         })
         // this.handleChange = this.handleChange.bind(this);
         return null
     }
     handleAdmissionDateChange = (date) => {
         console.log(date)
-        this.setState({ admission_date: date })
+        let wo = this.state.wo
+        wo.admission_date = date
+        this.setState({ wo })
     }
     handleStatusDateChange = (date) => {
         console.log(date)
@@ -120,30 +128,101 @@ class FormWorkOrder extends React.Component {
     }
 
     handleEquipmentChange = (event) => {
-        this.setState({ equipment: event.target.value })
-        console.log('cambio a ', this.state.equipment)
+        let wo = this.state.wo
+        wo.equipment = event.target.value
+        this.setState({ wo })
+        console.log('cambio a ', this.state.wo.equipment)
     };
     handleStatusChange = (event) => {
-        this.setState({ status_value: event.target.value })
+        let wo = this.state.wo
+        wo.last_status = event.target.value
+        this.setState({ wo })
         console.log(event)
     };
     handleInputChange = (event) => {
+        console.log(event.target.value)
+        console.log(event.target.name)
         let name = event.target.name
+        let wo = this.state.wo
+        wo[name] = event.target.value
+        console.log(wo)
         this.setState({
-            ...this.state, [name]: event.target.value
+            ...this.state,
+            wo
+            //  [name]: event.target.value
         })
     };
+    handleObservationChange = (event) => {
+        this.setState({
+            ...this.state,
+            observation: event.target.value
+        })
+    }
+    handleCleanForm = () => {
+        this.setState({
+            new: this.props.new,
+        })
+    }
     handleSubmit = () => {
         this.setState({
             generate: true
         })
     }
     insertWorkOrder = (client_id) => {
+        this.setState({
+            // isLoading: true,
+            generate: false,
+        })
         console.log("Se generó este id de cliente ", client_id)
-        //TODO generar work order
+        //Aca debería hacer algo como llamar a la clase History y crearle los parametros
+        let wo = this.state.wo
+        wo.client_id = client_id
+        let history = {
+            id_wo: wo.id,
+            date_status: this.state.status_date,
+            id_status: wo.last_status,
+            observation: this.state.observation
+        }
+
+        if (this.state.new) {
+            WorkOrderRepository.create(wo, history)
+                .then((res) => {
+                    this.checkComplete(res)
+                })
+        } else {
+            WorkOrderRepository.update(wo, history)
+                .then((res) => {
+                    this.checkComplete(res)
+                })
+            //TODO restricciones para poder ingresar
+        }
+
     }
 
+    checkComplete = (res) => {
+        if (res) {
+            this.setState({
+                inProgress:false,
+                snackBarOpen: true,
+                messageResult: "Se ingresó correctamente",
+            })
+
+        }
+    }
+
+
+    handleCloseSnackbar = (event, reason) => {
+        this.setState({
+            snackBarOpen: false,
+            isLoading: false,
+
+        })
+
+    }
+
+
     render() {
+        const { wo } = this.state
         const styleFormTextField = {
             '& > *': {
                 width: '30ch',
@@ -155,13 +234,13 @@ class FormWorkOrder extends React.Component {
             width: '100%',
         }
         const styleTextDisplay = {
-            display: idTypeChange.some(v => v === this.state.status_value) || this.state.update ? "inline-flex" : "none",
+            display: idTypeChange.some(v => v === wo.last_status) || this.state.update ? "inline-flex" : "none",
             marginTop: '16px',
             marginLeft: '1px',
             width: '100%',
         }
         const styleTextDisplayFinish = {
-            display: idTypeDelivery.some(v => v === this.state.status_value) || this.state.update ? "inline-flex" : "none",
+            display: idTypeDelivery.some(v => v === wo.last_status) || this.state.update ? "inline-flex" : "none",
             marginTop: '16px',
             marginLeft: '1px',
             width: '100%',
@@ -182,25 +261,38 @@ class FormWorkOrder extends React.Component {
             flexGrow: 1,
             margin: '10px'
         }
-        if (this.state.isLoading) {
-            return <div>Cargando</div>
-        }
+
         return (
             <form style={styleFormTextField} noValidate autoComplete="off">
-                <Paper style={stylePaper}>
+
+
+
+                {!this.state.isLoading && <Paper style={stylePaper}>
+                <Backdrop open={this.state.isLoading || this.state.inProgress} style={{
+                    zIndex: 99,
+                    color: '#fff'
+                }}>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+
                     <Grid container justify='center' style={styleRoot} spacing={2} >
                         <Grid item xs={12}>
-                            <FormClient new={this.state.new} generate={this.state.generate} onClientInsert={this.insertWorkOrder} id={this.state.client_id} />
+                            <FormClient
+                                new={this.state.new}
+                                id={wo.client_id}
+                                generate={this.state.generate}
+                                onClientInsert={this.insertWorkOrder}
+                            />
                         </Grid>
                         <Grid item xs={12} sm={3}>
                             <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale("es")}>
                                 <KeyboardDatePicker
                                     margin="normal"
-                                    id="admissionDate"
+                                    id="admission_date"
                                     label="Fecha de ingreso"
                                     disabled={!this.props.new && !this.state.update}
                                     format="DD/MM/yyyy"
-                                    value={this.state.admission_date}
+                                    value={wo.admission_date}
                                     onChange={this.handleAdmissionDateChange}
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
@@ -214,7 +306,7 @@ class FormWorkOrder extends React.Component {
                                 style={styleTextField}
                                 labelId="lblEquipment"
                                 disabled={!this.props.new && !this.state.update}
-                                value={this.state.equipment}
+                                value={wo.equipment}
                                 onChange={this.handleEquipmentChange}
                                 label="Equipo"
                             // variant='outlined'
@@ -236,7 +328,7 @@ class FormWorkOrder extends React.Component {
                                 label="Marca"
                                 onChange={this.handleInputChange}
                                 disabled={!this.props.new && !this.state.update}
-                                value={this.state.brand}
+                                value={wo.brand}
                                 variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={3}>
@@ -245,7 +337,7 @@ class FormWorkOrder extends React.Component {
                                 name="model" label="Modelo"
 
                                 disabled={!this.props.new && !this.state.update}
-                                value={this.state.model} variant="outlined" />
+                                value={wo.model} variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={4}>
                             <TextField
@@ -254,7 +346,7 @@ class FormWorkOrder extends React.Component {
                                 label="Nro Serie"
                                 onChange={this.handleInputChange}
                                 disabled={!this.props.new && !this.state.update}
-                                value={this.state.serial_number}
+                                value={wo.serial_number}
                                 variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={8}>
@@ -265,7 +357,8 @@ class FormWorkOrder extends React.Component {
                                 disabled={!this.props.new && !this.state.update}
                                 label="Falla"
                                 onChange={this.handleInputChange}
-                                value={this.state.failure}
+                                value={wo.failure}
+                                // value={null}
                                 variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={3} style={{ display: this.props.new ? 'none' : 'inline-block' }}>
@@ -282,7 +375,8 @@ class FormWorkOrder extends React.Component {
                             <TextField
                                 style={styleTextField}
                                 multiline rowsMax={3}
-                                onChange={this.handleInputChange}
+                                onChange={this.handleObservationChange}
+                                value={this.state.observation}
                                 name="observation"
                                 label="Observaciones"
                                 variant="outlined" />
@@ -308,7 +402,7 @@ class FormWorkOrder extends React.Component {
                                 style={styleTextField}
                                 labelId="lblStatus"
                                 name="status_value"
-                                value={this.state.status_value}
+                                value={wo.last_status}
                                 onChange={this.handleStatusChange}
                                 label="Estado"
                             >
@@ -325,10 +419,11 @@ class FormWorkOrder extends React.Component {
                             <TextField
                                 style={styleTextDisplayFinish}
                                 id="warranty"
+                                name='warranty'
                                 label="Garantia"
                                 onChange={this.handleInputChange}
-                                disabled={this.state.warranty && !this.state.update}
-                                value={this.state.warranty}
+                                disabled={wo.deliver_date && !this.state.update}
+                                value={wo.warranty}
                                 variant="outlined"
                                 InputProps={{
                                     startAdornment: <InputAdornment position="start">Meses</InputAdornment>,
@@ -341,7 +436,7 @@ class FormWorkOrder extends React.Component {
                                 name="final_amount"
                                 label="Importe final"
                                 onChange={this.handleInputChange}
-                                value={this.state.final_amount}
+                                value={wo.final_amount}
                                 variant="outlined"
                                 type='number'
                                 min="0"
@@ -354,9 +449,9 @@ class FormWorkOrder extends React.Component {
                                 }}
                             />
                         </Grid>
-                        <Paper style={stylePaper}>
+                        {/* <Paper style={stylePaper}> */}
                             <Grid container alignItems='center' justify='center' style={styleRoot} spacing={2} >
-                                <Grid item xs={6} sm={2} >
+                                {/* <Grid item xs={6} sm={2} >
                                     <Button
                                         style={styleButton}
                                         variant="contained"
@@ -365,7 +460,7 @@ class FormWorkOrder extends React.Component {
                                     >
                                         Limpiar
                         </Button>
-                                </Grid>
+                                </Grid> */}
                                 <Grid item xs={6} sm={2}>
                                     <Button
                                         style={styleButton}
@@ -379,10 +474,16 @@ class FormWorkOrder extends React.Component {
                             </Button>
                                 </Grid>
                             </Grid>
-                        </Paper>
+                        {/* </Paper> */}
                     </Grid>
+
+                    <Snackbar open={this.state.snackBarOpen} autoHideDuration={2000} onClose={this.handleCloseSnackbar}>
+                        <Alert variant="filled" onClose={this.handleCloseSnackbar} severity={this.state.result}>{this.state.messageResult}</Alert>
+                    </Snackbar>
                 </Paper>
+                }
             </form>
+
         )
     }
 }
