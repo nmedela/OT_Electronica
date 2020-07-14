@@ -44,7 +44,12 @@ class Movements extends React.Component {
                 <Grid container justify='center' style={styleRoot} spacing={2} >
 
                     <Grid item xs={12}>
-                        <TextBox value={this.state.nombre} label={'Nombre'} name={'nombre'} handleBlur={this.handleChangeValue} />
+                        <TextBox 
+                        value={this.state.nombre} 
+                        label={'Nombre'} 
+                        name={'nombre'} 
+                        handleBlur={this.handleChangeValue} 
+                        />
                     </Grid>
                     <Grid item xs={12}>
                         <TextBox value={this.state.apellido} label={'Apellido'} name={'apellido'} handleBlur={this.handleChangeValue} />
