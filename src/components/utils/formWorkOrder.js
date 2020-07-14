@@ -3,6 +3,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
+import TextBox from './../utils/textBox'
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -71,6 +72,9 @@ class FormWorkOrder extends React.Component {
         // this.handleChange = this.handleChange.bind(this)
         this.insertWorkOrder = this.insertWorkOrder.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleInputChange=this.handleInputChange.bind(this)
+        this.handleObservationChange=this.handleObservationChange.bind(this)
+        // this.handleChangeValue = this.handleChangeValue.bind(this)
     }
 
     componentWillMount() {
@@ -83,7 +87,7 @@ class FormWorkOrder extends React.Component {
                     console.log("inició", this.state)
                     this.setState({ new: false, isLoading: false, inProgress:false })
                 })
-            // .then((res) => {
+                // .then((res) => {
             //     return this.setFields(res)
             // }).then((res) => {
             //     this.setState({ isLoading: false })
@@ -126,7 +130,7 @@ class FormWorkOrder extends React.Component {
         console.log(event)
         this.setState({ update: event.target.checked })
     }
-
+    
     handleEquipmentChange = (event) => {
         let wo = this.state.wo
         wo.equipment = event.target.value
@@ -139,23 +143,38 @@ class FormWorkOrder extends React.Component {
         this.setState({ wo })
         console.log(event)
     };
-    handleInputChange = (event) => {
-        console.log(event.target.value)
-        console.log(event.target.name)
-        let name = event.target.name
+    handleInputChange = (value, name) => {
         let wo = this.state.wo
-        wo[name] = event.target.value
-        console.log(wo)
+        wo[name] = value
         this.setState({
             ...this.state,
             wo
-            //  [name]: event.target.value
         })
+        console.log('cambio ', name, value)
     };
+    // handleInputChange = (event) => {
+    //     console.log(event.target.value)
+    //     console.log(event.target.name)
+    //     let name = event.target.name
+    //     let wo = this.state.wo
+    //     wo[name] = event.target.value
+    //     console.log(wo)
+    //     this.setState({
+    //         ...this.state,
+    //         wo
+    //         //  [name]: event.target.value
+    //     })
+    // };
     handleObservationChange = (event) => {
         this.setState({
             ...this.state,
             observation: event.target.value
+        })
+    }
+    handleObservationChange = (value,name) => {
+        this.setState({
+            ...this.state,
+            [name]: value
         })
     }
     handleCleanForm = () => {
@@ -321,7 +340,7 @@ class FormWorkOrder extends React.Component {
                             </Select>
                         </Grid>
                         <Grid item xs={12} sm={2}>
-                            <TextField
+                            {/* <TextField
                                 style={styleTextField}
                                 id='brand'
                                 name='brand'
@@ -329,34 +348,42 @@ class FormWorkOrder extends React.Component {
                                 onChange={this.handleInputChange}
                                 disabled={!this.props.new && !this.state.update}
                                 value={wo.brand}
+                                variant="outlined" /> */}
+                                <TextBox
+                                style={styleTextField}
+                                name='brand'
+                                label="Marca"
+                                handleBlur={this.handleInputChange}
+                                disabled={!this.props.new && !this.state.update}
+                                value={wo.brand}
                                 variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={3}>
-                            <TextField style={styleTextField}
-                                onChange={this.handleInputChange}
+                            <TextBox style={styleTextField}
+                                handleBlur={this.handleInputChange}
                                 name="model" label="Modelo"
 
                                 disabled={!this.props.new && !this.state.update}
                                 value={wo.model} variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <TextField
+                            <TextBox
                                 style={styleTextField}
                                 name="serial_number"
                                 label="Nro Serie"
-                                onChange={this.handleInputChange}
+                                handleBlur={this.handleInputChange}
                                 disabled={!this.props.new && !this.state.update}
                                 value={wo.serial_number}
                                 variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={8}>
-                            <TextField
+                            <TextBox
                                 style={styleTextField}
                                 multiline rowsMax={2}
                                 name="failure"
                                 disabled={!this.props.new && !this.state.update}
                                 label="Falla"
-                                onChange={this.handleInputChange}
+                                handleBlur={this.handleInputChange}
                                 value={wo.failure}
                                 // value={null}
                                 variant="outlined" />
@@ -372,10 +399,10 @@ class FormWorkOrder extends React.Component {
                             />
                         </Grid>
                         <Grid item xs={12} sm={9}>
-                            <TextField
+                            <TextBox
                                 style={styleTextField}
                                 multiline rowsMax={3}
-                                onChange={this.handleObservationChange}
+                                handleBlur={this.handleObservationChange}
                                 value={this.state.observation}
                                 name="observation"
                                 label="Observaciones"
@@ -416,12 +443,12 @@ class FormWorkOrder extends React.Component {
                             </Select>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField
+                            <TextBox
                                 style={styleTextDisplayFinish}
                                 id="warranty"
                                 name='warranty'
                                 label="Garantia"
-                                onChange={this.handleInputChange}
+                                handleBlur={this.handleInputChange}
                                 disabled={wo.deliver_date && !this.state.update}
                                 value={wo.warranty}
                                 variant="outlined"
@@ -431,11 +458,11 @@ class FormWorkOrder extends React.Component {
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <TextField
+                            <TextBox
                                 style={styleTextDisplayFinish}
                                 name="final_amount"
                                 label="Importe final"
-                                onChange={this.handleInputChange}
+                                handleBlur={this.handleInputChange}
                                 value={wo.final_amount}
                                 variant="outlined"
                                 type='number'
@@ -448,6 +475,7 @@ class FormWorkOrder extends React.Component {
                                     }
                                 }}
                             />
+                            
                         </Grid>
                         {/* <Paper style={stylePaper}> */}
                             <Grid container alignItems='center' justify='center' style={styleRoot} spacing={2} >

@@ -10,13 +10,20 @@ class TextBox extends React.Component {
                 value: null
             }
         )
-        this.handleChange = this.handleChange.bind(this)
+        this.handleBlur = this.handleBlur.bind(this)
     }
 
-    componentWillMount(){
-        if(this.props.value){
+    componentWillMount() {
+        if (this.props.value) {
             this.setState({
-                value:this.props.value
+                value: this.props.value
+            })
+        }
+    }
+    componentWillReceiveProps(props) {
+        if (this.props.value) {
+            this.setState({
+                value: this.props.value
             })
         }
     }
@@ -24,6 +31,9 @@ class TextBox extends React.Component {
         this.setState({
             value: event.target.value
         })
+    }
+    handleBlur = () => {
+        this.props.handleBlur(this.state.value, this.props.name)
     }
     render() {
         const styleTextField = {
@@ -40,14 +50,17 @@ class TextBox extends React.Component {
         return (
             <div>
                 <TextField
-                    // style={styleTextField}
-                    id='propio'
-                    // name='brand'
-                    label="Propio"
+                    style={this.props.style}
+                    name={this.props.name}
+                    label={this.props.label}
                     onChange={this.handleChange}
-                    // disabled={!this.props.new && !this.state.update}
+                    onBlur={this.handleBlur}
+                    disabled={this.props.disabled}
                     value={this.state.value}
-                    variant="outlined" />
+                    variant={this.props.variant}
+                    type={this.props.type}
+                    InputProps={this.props.InputProps}
+                />
             </div>
         )
     }
