@@ -163,16 +163,17 @@ class FormClient extends React.Component {
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                 >
-                                    <TextField
-                                        style={styleTextField}
-                                        id="tel"
-                                        label="Telefono"
-                                        name="tel"
-                                        value={client.tel}
-                                        onChange={this.handleTextChange}
-                                        disabled={!this.state.update && !this.props.new}
-                                        variant="outlined"
-                                        type='number' />
+                                <TextField
+                                    style={styleTextField}
+                                    id="tel"
+                                    label="Telefono"
+                                    name="tel"
+                                    value={client.tel}
+                                    onChange={this.handleTextChange}
+                                    disabled={!this.state.update && !this.props.new}
+                                    variant="outlined"
+                                    type='number' />
+                                     
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <TextField

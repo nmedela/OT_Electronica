@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-    display: 'none',
+    display: 'inline',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     },
     marginLeft: 0,
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('xs')]: {
       marginLeft: theme.spacing(1),
       width: 'auto',
     },
@@ -119,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('xs')]: {
       width: '12ch',
       '&:focus': {
         width: '20ch',
@@ -142,7 +142,7 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
   const handleTitle = (_title) => {
-    setTitle(_title);
+    // setTitle(_title);
     handleDrawerClose()
   };
 
@@ -227,7 +227,9 @@ export default function PersistentDrawerLeft() {
               itemsMenu.map((item) => {
                 return (<Route
                   path={`${item.path}`}
-                  render={() => { return item.component }} />)
+                  render={() => { 
+                    setTitle(item.title)
+                    return item.component }} />)
               })
             }
           </Switch>

@@ -29,11 +29,16 @@ import {
 } from '@material-ui/pickers';
 import { WorkOrderRepository } from './../../services/repository'
 import { HistoryRepository } from './../../services/repository'
-
+import ReactToPdf from "react-to-pdf";
 
 const idTypeDelivery = [3]
 const idTypeChange = [1, 2, 3, 4, 5, 6]
-
+const options = {
+    // orientation: 'landscape',
+    // unit: 'in',
+    // format: [4,2]
+};
+const ref = React.createRef();
 
 class FormWorkOrder extends React.Component {
 
@@ -61,7 +66,7 @@ class FormWorkOrder extends React.Component {
             status_date: moment.now(),
             observation: null,
             isLoading: false,
-            inProgress:false,
+            inProgress: false,
             update: false,
             generate: false,
             new: this.props.new,
@@ -72,22 +77,22 @@ class FormWorkOrder extends React.Component {
         // this.handleChange = this.handleChange.bind(this)
         this.insertWorkOrder = this.insertWorkOrder.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleInputChange=this.handleInputChange.bind(this)
-        this.handleObservationChange=this.handleObservationChange.bind(this)
+        this.handleInputChange = this.handleInputChange.bind(this)
+        this.handleObservationChange = this.handleObservationChange.bind(this)
         // this.handleChangeValue = this.handleChangeValue.bind(this)
     }
 
     componentWillMount() {
         if (!this.props.new) {
-            this.setState({ isLoading: true, inProgress:true })
+            this.setState({ isLoading: true, inProgress: true })
             this.getWorkOrder(this.props.id)
                 .then((res) => {
                     console.log("esto trae la wo, ", res)
                     this.setFields(res)
                     console.log("inició", this.state)
-                    this.setState({ new: false, isLoading: false, inProgress:false })
+                    this.setState({ new: false, isLoading: false, inProgress: false })
                 })
-                // .then((res) => {
+            // .then((res) => {
             //     return this.setFields(res)
             // }).then((res) => {
             //     this.setState({ isLoading: false })
@@ -130,7 +135,7 @@ class FormWorkOrder extends React.Component {
         console.log(event)
         this.setState({ update: event.target.checked })
     }
-    
+
     handleEquipmentChange = (event) => {
         let wo = this.state.wo
         wo.equipment = event.target.value
@@ -171,7 +176,7 @@ class FormWorkOrder extends React.Component {
             observation: event.target.value
         })
     }
-    handleObservationChange = (value,name) => {
+    handleObservationChange = (value, name) => {
         this.setState({
             ...this.state,
             [name]: value
@@ -221,12 +226,12 @@ class FormWorkOrder extends React.Component {
     checkComplete = (res) => {
         if (res) {
             this.setState({
-                inProgress:false,
+                inProgress: false,
                 snackBarOpen: true,
                 messageResult: "Se ingresó correctamente",
             })
-
         }
+
     }
 
 
@@ -282,65 +287,68 @@ class FormWorkOrder extends React.Component {
         }
 
         return (
-            <form style={styleFormTextField} noValidate autoComplete="off">
+            <div>
+
+                <form style={styleFormTextField} noValidate autoComplete="off">
+                  
+                    {!this.state.isLoading && <Paper style={stylePaper}>
+                        <Backdrop open={this.state.isLoading || this.state.inProgress} style={{
+                            zIndex: 99,
+                            color: '#fff'
+                        }}>
+                            <CircularProgress color="inherit" />
+                        </Backdrop>
 
 
+                        <Grid container justify='center' style={styleRoot} spacing={2} >
 
-                {!this.state.isLoading && <Paper style={stylePaper}>
-                <Backdrop open={this.state.isLoading || this.state.inProgress} style={{
-                    zIndex: 99,
-                    color: '#fff'
-                }}>
-                    <CircularProgress color="inherit" />
-                </Backdrop>
 
-                    <Grid container justify='center' style={styleRoot} spacing={2} >
-                        <Grid item xs={12}>
-                            <FormClient
-                                new={this.state.new}
-                                id={wo.client_id}
-                                generate={this.state.generate}
-                                onClientInsert={this.insertWorkOrder}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={3}>
-                            <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale("es")}>
-                                <KeyboardDatePicker
-                                    margin="normal"
-                                    id="admission_date"
-                                    label="Fecha de ingreso"
-                                    disabled={!this.props.new && !this.state.update}
-                                    format="DD/MM/yyyy"
-                                    value={wo.admission_date}
-                                    onChange={this.handleAdmissionDateChange}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
+                            <Grid item xs={12}>
+                                <FormClient
+                                    new={this.state.new}
+                                    id={wo.client_id}
+                                    generate={this.state.generate}
+                                    onClientInsert={this.insertWorkOrder}
                                 />
-                            </MuiPickersUtilsProvider>
-                        </Grid>
-                        <Grid item xs={12} sm={2}>
-                            <InputLabel shrink id="lblEquipment">Equipo</InputLabel>
-                            <Select
-                                style={styleTextField}
-                                labelId="lblEquipment"
-                                disabled={!this.props.new && !this.state.update}
-                                value={wo.equipment}
-                                onChange={this.handleEquipmentChange}
-                                label="Equipo"
-                            // variant='outlined'
-                            >
+                            </Grid>
+                            <Grid item xs={12} sm={3}>
+                                <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale("es")}>
+                                    <KeyboardDatePicker
+                                        margin="normal"
+                                        id="admission_date"
+                                        label="Fecha de ingreso"
+                                        disabled={!this.props.new && !this.state.update}
+                                        format="DD/MM/yyyy"
+                                        value={wo.admission_date}
+                                        onChange={this.handleAdmissionDateChange}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                    />
+                                </MuiPickersUtilsProvider>
+                            </Grid>
+                            <Grid item xs={12} sm={2}>
+                                <InputLabel shrink id="lblEquipment">Equipo</InputLabel>
+                                <Select
+                                    style={styleTextField}
+                                    labelId="lblEquipment"
+                                    disabled={!this.props.new && !this.state.update}
+                                    value={wo.equipment}
+                                    onChange={this.handleEquipmentChange}
+                                    label="Equipo"
+                                // variant='outlined'
+                                >
 
-                                {equipments.map((equipment) =>
-                                    (
-                                        <MenuItem value={equipment.id}>{equipment.title}</MenuItem>
-                                    )
+                                    {equipments.map((equipment) =>
+                                        (
+                                            <MenuItem value={equipment.id}>{equipment.title}</MenuItem>
+                                        )
 
-                                )}
-                            </Select>
-                        </Grid>
-                        <Grid item xs={12} sm={2}>
-                            {/* <TextField
+                                    )}
+                                </Select>
+                            </Grid>
+                            <Grid item xs={12} sm={2}>
+                                {/* <TextField
                                 style={styleTextField}
                                 id='brand'
                                 name='brand'
@@ -350,134 +358,134 @@ class FormWorkOrder extends React.Component {
                                 value={wo.brand}
                                 variant="outlined" /> */}
                                 <TextBox
-                                style={styleTextField}
-                                name='brand'
-                                label="Marca"
-                                handleBlur={this.handleInputChange}
-                                disabled={!this.props.new && !this.state.update}
-                                value={wo.brand}
-                                variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={3}>
-                            <TextBox style={styleTextField}
-                                handleBlur={this.handleInputChange}
-                                name="model" label="Modelo"
+                                    style={styleTextField}
+                                    name='brand'
+                                    label="Marca"
+                                    handleBlur={this.handleInputChange}
+                                    disabled={!this.props.new && !this.state.update}
+                                    value={wo.brand}
+                                    variant="outlined" />
+                            </Grid>
+                            <Grid item xs={12} sm={3}>
+                                <TextBox style={styleTextField}
+                                    handleBlur={this.handleInputChange}
+                                    name="model" label="Modelo"
 
-                                disabled={!this.props.new && !this.state.update}
-                                value={wo.model} variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextBox
-                                style={styleTextField}
-                                name="serial_number"
-                                label="Nro Serie"
-                                handleBlur={this.handleInputChange}
-                                disabled={!this.props.new && !this.state.update}
-                                value={wo.serial_number}
-                                variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={8}>
-                            <TextBox
-                                style={styleTextField}
-                                multiline rowsMax={2}
-                                name="failure"
-                                disabled={!this.props.new && !this.state.update}
-                                label="Falla"
-                                handleBlur={this.handleInputChange}
-                                value={wo.failure}
-                                // value={null}
-                                variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={3} style={{ display: this.props.new ? 'none' : 'inline-block' }}>
-                            <InputLabel shrink id="lblUpdate">Editar</InputLabel>
-                            <Switch
-                                checked={this.state.update}
-                                onChange={this.handleUpdateChange}
-                                disabled={this.props.new}
-                                name="update"
-                                color="primary"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={9}>
-                            <TextBox
-                                style={styleTextField}
-                                multiline rowsMax={3}
-                                handleBlur={this.handleObservationChange}
-                                value={this.state.observation}
-                                name="observation"
-                                label="Observaciones"
-                                variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={3}>
-                            <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale("es")}>
-                                <KeyboardDatePicker
-                                    style={styleTextDisplay}
-                                    margin="normal"
-                                    label={"Fecha"}
-                                    onChange={this.handleStatusDateChange}
-                                    format="DD/MM/yyyy"
-                                    value={this.state.status_date}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
+                                    disabled={!this.props.new && !this.state.update}
+                                    value={wo.model} variant="outlined" />
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <TextBox
+                                    style={styleTextField}
+                                    name="serial_number"
+                                    label="Nro Serie"
+                                    handleBlur={this.handleInputChange}
+                                    disabled={!this.props.new && !this.state.update}
+                                    value={wo.serial_number}
+                                    variant="outlined" />
+                            </Grid>
+                            <Grid item xs={12} sm={8}>
+                                <TextBox
+                                    style={styleTextField}
+                                    multiline rowsMax={2}
+                                    name="failure"
+                                    disabled={!this.props.new && !this.state.update}
+                                    label="Falla"
+                                    handleBlur={this.handleInputChange}
+                                    value={wo.failure}
+                                    // value={null}
+                                    variant="outlined" />
+                            </Grid>
+                            <Grid item xs={12} sm={3} style={{ display: this.props.new ? 'none' : 'inline-block' }}>
+                                <InputLabel shrink id="lblUpdate">Editar</InputLabel>
+                                <Switch
+                                    checked={this.state.update}
+                                    onChange={this.handleUpdateChange}
+                                    disabled={this.props.new}
+                                    name="update"
+                                    color="primary"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={9}>
+                                <TextBox
+                                    style={styleTextField}
+                                    multiline rowsMax={3}
+                                    handleBlur={this.handleObservationChange}
+                                    value={this.state.observation}
+                                    name="observation"
+                                    label="Observaciones"
+                                    variant="outlined" />
+                            </Grid>
+                            <Grid item xs={12} sm={3}>
+                                <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale("es")}>
+                                    <KeyboardDatePicker
+                                        style={styleTextDisplay}
+                                        margin="normal"
+                                        label={"Fecha"}
+                                        onChange={this.handleStatusDateChange}
+                                        format="DD/MM/yyyy"
+                                        value={this.state.status_date}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                    />
+                                </MuiPickersUtilsProvider>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <InputLabel shrink id="lblStatus">Estado</InputLabel>
+                                <Select
+                                    style={styleTextField}
+                                    labelId="lblStatus"
+                                    name="status_value"
+                                    value={wo.last_status}
+                                    onChange={this.handleStatusChange}
+                                    label="Estado"
+                                >
+
+                                    {status.map((status) =>
+                                        (
+                                            <MenuItem value={status.id} >{status.title}</MenuItem>
+                                        )
+
+                                    )}
+                                </Select>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextBox
+                                    style={styleTextDisplayFinish}
+                                    id="warranty"
+                                    name='warranty'
+                                    label="Garantia"
+                                    handleBlur={this.handleInputChange}
+                                    disabled={wo.deliver_date && !this.state.update}
+                                    value={wo.warranty}
+                                    variant="outlined"
+                                    InputProps={{
+                                        startAdornment: <InputAdornment position="start">Meses</InputAdornment>,
                                     }}
                                 />
-                            </MuiPickersUtilsProvider>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <InputLabel shrink id="lblStatus">Estado</InputLabel>
-                            <Select
-                                style={styleTextField}
-                                labelId="lblStatus"
-                                name="status_value"
-                                value={wo.last_status}
-                                onChange={this.handleStatusChange}
-                                label="Estado"
-                            >
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <TextBox
+                                    style={styleTextDisplayFinish}
+                                    name="final_amount"
+                                    label="Importe final"
+                                    handleBlur={this.handleInputChange}
+                                    value={wo.final_amount}
+                                    variant="outlined"
+                                    type='number'
+                                    min="0"
+                                    InputProps={{
+                                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                        type: 'number',
+                                        inputProps: {
+                                            min: '0',
+                                        }
+                                    }}
+                                />
 
-                                {status.map((status) =>
-                                    (
-                                        <MenuItem value={status.id} >{status.title}</MenuItem>
-                                    )
-
-                                )}
-                            </Select>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextBox
-                                style={styleTextDisplayFinish}
-                                id="warranty"
-                                name='warranty'
-                                label="Garantia"
-                                handleBlur={this.handleInputChange}
-                                disabled={wo.deliver_date && !this.state.update}
-                                value={wo.warranty}
-                                variant="outlined"
-                                InputProps={{
-                                    startAdornment: <InputAdornment position="start">Meses</InputAdornment>,
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextBox
-                                style={styleTextDisplayFinish}
-                                name="final_amount"
-                                label="Importe final"
-                                handleBlur={this.handleInputChange}
-                                value={wo.final_amount}
-                                variant="outlined"
-                                type='number'
-                                min="0"
-                                InputProps={{
-                                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                    type: 'number',
-                                    inputProps: {
-                                        min: '0',
-                                    }
-                                }}
-                            />
-                            
-                        </Grid>
-                        {/* <Paper style={stylePaper}> */}
+                            </Grid>
+                            {/* <Paper style={stylePaper}> */}
                             <Grid container alignItems='center' justify='center' style={styleRoot} spacing={2} >
                                 {/* <Grid item xs={6} sm={2} >
                                     <Button
@@ -485,10 +493,10 @@ class FormWorkOrder extends React.Component {
                                         variant="contained"
                                         color="secondary"
                                         startIcon={<DeleteIcon />}
-                                    >
+                                        >
                                         Limpiar
-                        </Button>
-                                </Grid> */}
+                                        </Button>
+                                    </Grid> */}
                                 <Grid item xs={6} sm={2}>
                                     <Button
                                         style={styleButton}
@@ -502,15 +510,16 @@ class FormWorkOrder extends React.Component {
                             </Button>
                                 </Grid>
                             </Grid>
-                        {/* </Paper> */}
-                    </Grid>
+                            {/* </Paper> */}
+                        </Grid>
 
-                    <Snackbar open={this.state.snackBarOpen} autoHideDuration={2000} onClose={this.handleCloseSnackbar}>
-                        <Alert variant="filled" onClose={this.handleCloseSnackbar} severity={this.state.result}>{this.state.messageResult}</Alert>
-                    </Snackbar>
-                </Paper>
-                }
-            </form>
+                        <Snackbar open={this.state.snackBarOpen} autoHideDuration={2000} onClose={this.handleCloseSnackbar}>
+                            <Alert variant="filled" onClose={this.handleCloseSnackbar} severity={this.state.result}>{this.state.messageResult}</Alert>
+                        </Snackbar>
+                    </Paper>
+                    }
+                </form>
+            </div>
 
         )
     }
