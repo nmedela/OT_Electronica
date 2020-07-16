@@ -2,11 +2,6 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid';
 
 
-const options = {
-    // orientation: 'landscape',
-    // unit: 'in',
-    // format: [4,2]
-};
 const styleRoot = {
     flexGrow: 1,
 }

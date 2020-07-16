@@ -14,7 +14,9 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import { WorkOrderRepository } from '../../services/repository';
+// import { WorkOrderRepository } from '../../services/repository';
+import workOrderRepository from './../../services/repository'
+// const workOrderRepository = require('./../../services/repository').WorkOrderRepository
 
 const statusList = [{ id: -1, title: "Todos" }, ...status]
 const styleTextField = {
@@ -74,7 +76,7 @@ class WorkOrders extends React.Component {
         console.log('cambio')
     };
     getWorkOrders = () => {
-        return WorkOrderRepository.getAll()
+        return workOrderRepository.getAll()
     }
     setFields = (workOrders) => {
         this.setState({
@@ -131,7 +133,7 @@ class WorkOrders extends React.Component {
 
                                 {statusList.map((status) =>
                                     (
-                                        <MenuItem value={status.id} >{status.title}</MenuItem>
+                                        <MenuItem key={status.id} value={status.id} >{status.title}</MenuItem>
                                     )
 
                                 )}

@@ -1,19 +1,18 @@
 const { History } = require('./../domain/History')
-const moment = require('moment')
 
-var idMainHistory = 1
+var idMainHistory = 0
 class HistoryRepository {
     constructor() {
         this.history = []
-        this.history.push(
-            {
-                id: 0,
-                id_wo: 0,
-                date_status: moment(1594603281789).format('DD/MM/yyyy'),
-                id_status: 0,
-                observation: "nada para observar",
-            }
-        )
+        // this.history.push(
+        //     {
+        //         id: 0,
+        //         id_wo: 0,
+        //         date_status: moment(1594603281789).format('DD/MM/yyyy'),
+        //         id_status: 0,
+        //         observation: "nada para observar",
+        //     }
+        // )
     }
 
     async create(newHistory) {
@@ -47,11 +46,12 @@ class HistoryRepository {
     }
 
     async getById(_id) {
-        return this.history.find(history => history.id == _id)
+        return this.history.find(history => history.id === _id)
     }
     async getAll() {
         return this.history
     }
 }
-
-module.exports = { HistoryRepository: new HistoryRepository() }
+const historyRepository = new HistoryRepository()
+// module.exports = { HistoryRepository: new HistoryRepository() }
+export default historyRepository

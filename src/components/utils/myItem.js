@@ -1,7 +1,6 @@
 import React from 'react'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-// import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
@@ -11,8 +10,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import FormWorkOrder from './formWorkOrder'
 import { status } from './../../domain/status'
-import { ClientRepository } from './../../services/repository'
-import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom'
+import {Link } from 'react-router-dom'
 class MyItem extends React.Component {
 
     constructor(props) {
@@ -52,7 +50,7 @@ class MyItem extends React.Component {
                 <ListItem button onClick={this.handleClick} style={{ marginTop: '20px' }}>
                     <ListItemAvatar>
                         <Avatar>
-                            <i class="material-icons" style={{ color: status.find(s => s.id == this.props.onWO.last_status).color }}>{status.find(s => s.id == this.props.onWO.last_status).icon}</i>
+                            <i class="material-icons" style={{ color: status.find(s => s.id === this.props.onWO.last_status).color }}>{status.find(s => s.id === this.props.onWO.last_status).icon}</i>
                         </Avatar>
                     </ListItemAvatar>
                     {this.state.open ? <ExpandLess /> : <ExpandMore />}

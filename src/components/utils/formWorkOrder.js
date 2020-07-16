@@ -2,7 +2,6 @@ import 'date-fns';
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
 import TextBox from './../utils/textBox'
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -15,35 +14,28 @@ import Switch from '@material-ui/core/Switch';
 import moment from "moment";
 import FormClient from './../utils/formClient'
 import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import Snackbar from '@material-ui/core/Snackbar';
 import { Alert } from '@material-ui/lab';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { Redirect } from 'react-router-dom'
 import 'moment/locale/es'
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import { WorkOrderRepository } from './../../services/repository'
+// import { WorkOrderRepository } from './../../services/repository'
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Link } from 'react-router-dom'
+import workOrderRepository from './../../services/repository'
+// const workOrderRepository = require('./../../services/repository').WorkOrderRepository
 
 const idTypeDelivery = [3]
 const idTypeChange = [1, 2, 3, 4, 5, 6]
-const options = {
-    // orientation: 'landscape',
-    // unit: 'in',
-    // format: [4,2]
-};
-const ref = React.createRef();
-
 class FormWorkOrder extends React.Component {
 
     constructor(props, context) {
@@ -108,7 +100,7 @@ class FormWorkOrder extends React.Component {
     }
   
     getWorkOrder = (id) => {
-        return WorkOrderRepository.getById(id)
+        return workOrderRepository.getById(id)
     }
     setFields = (wo) => {
         console.log('Esto tiene el admission date ', moment(wo.admission_date))
@@ -167,19 +159,7 @@ class FormWorkOrder extends React.Component {
         })
         console.log('cambio ', name, value)
     };
-    // handleInputChange = (event) => {
-    //     console.log(event.target.value)
-    //     console.log(event.target.name)
-    //     let name = event.target.name
-    //     let wo = this.state.wo
-    //     wo[name] = event.target.value
-    //     console.log(wo)
-    //     this.setState({
-    //         ...this.state,
-    //         wo
-    //         //  [name]: event.target.value
-    //     })
-    // };
+
     handleObservationChange = (event) => {
         this.setState({
             ...this.state,
@@ -219,12 +199,12 @@ class FormWorkOrder extends React.Component {
         }
 
         if (this.state.new) {
-            WorkOrderRepository.create(wo, history)
+            workOrderRepository.create(wo, history)
                 .then((res) => {
                     this.checkComplete(res)
                 })
         } else {
-            WorkOrderRepository.update(wo, history)
+            workOrderRepository.update(wo, history)
                 .then((res) => {
                     this.checkComplete(res)
                 })
@@ -382,22 +362,13 @@ class FormWorkOrder extends React.Component {
 
                                     {equipments.map((equipment) =>
                                         (
-                                            <MenuItem value={equipment.id}>{equipment.title}</MenuItem>
+                                            <MenuItem key={equipment.id} value={equipment.id}>{equipment.title}</MenuItem>
                                         )
 
                                     )}
                                 </Select>
                             </Grid>
                             <Grid item xs={12} sm={2}>
-                                {/* <TextField
-                                style={styleTextField}
-                                id='brand'
-                                name='brand'
-                                label="Marca"
-                                onChange={this.handleInputChange}
-                                disabled={!this.props.new && !this.state.update}
-                                value={wo.brand}
-                                variant="outlined" /> */}
                                 <TextBox
                                     style={styleTextField}
                                     name='brand'
@@ -485,7 +456,7 @@ class FormWorkOrder extends React.Component {
 
                                     {status.map((status) =>
                                         (
-                                            <MenuItem value={status.id} >{status.title}</MenuItem>
+                                            <MenuItem key={status.id} value={status.id} >{status.title}</MenuItem>
                                         )
 
                                     )}

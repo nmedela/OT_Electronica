@@ -20,7 +20,7 @@ import { fade } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import { itemsMenu } from './itemsMenu';
 import PdfViewer from './../pages/pdfViewer'
-import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom'
+import { HashRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom'
 
 const drawerWidth = 240;
 
@@ -184,7 +184,7 @@ export default function PersistentDrawerLeft() {
           </div>
         </Toolbar>
       </AppBar>
-      <Router>
+      <Router basename="/">
         <Drawer
           className={classes.drawer}
           variant="persistent"
@@ -203,9 +203,9 @@ export default function PersistentDrawerLeft() {
           <Divider />
           <List>
             {itemsMenu.map((item, index) => (
-              <Link to={`${item.path}`} style={{ color: 'black', textDecoration: 'none' }}>
+              <Link key={item.title} to={`${item.path}`} style={{ color: 'black', textDecoration: 'none' }}>
                 <ListItem button onClick={() => { return handleTitle(item.title) }} key={item.title}>
-                  <ListItemIcon><i class="material-icons">{item.icon}</i></ListItemIcon>
+                  <ListItemIcon><i className="material-icons">{item.icon}</i></ListItemIcon>
                   <ListItemText primary={item.title} />
                 </ListItem>
               </Link>
@@ -227,8 +227,7 @@ export default function PersistentDrawerLeft() {
             {
               itemsMenu.map((item) => {
                 return (
-                  <Route
-                  
+                  <Route key={item.title}
                     path={`${item.path}`}
                     render={() => {
                       setTitle(item.title)
@@ -241,7 +240,7 @@ export default function PersistentDrawerLeft() {
               path='/lector/:id'
               render={(props) => {
                 return <PdfViewer
-                {...props}
+                  {...props}
                   wo={{
                     code: '123456',
                     last_status: 'Entregado',

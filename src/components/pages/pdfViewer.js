@@ -1,11 +1,17 @@
 import React from 'react'
-import Grid from '@material-ui/core/Grid';
 import { Document, Page, Text, View, StyleSheet, PDFViewer, Image, Font } from "@react-pdf/renderer";
 import path from './../../fonts/Roboto-Regular.ttf'
 import imagen from './../../logoEmpresa.png'
-import { WorkOrderRepository } from './../../services/repository'
-import { ClientRepository } from './../../services/repository'
+// import { ClientRepository } from './../../services/clientRepository'
 import moment, { isMoment } from "moment";
+import { WorkOrder } from '../../domain/WorkOrder';
+// const { ClientRepository } = require('./../../services/clientRepository')
+import clientRepository from './../../services/clientRepository'
+import workOrderRepository from './../../services/repository'
+// const workOrderRepository = require('./../../services/repository').WorkOrderRepository
+// import  {WorkOrderRepository}  from './../../services/repository'
+// const clientRepository = require('./../../services/clientRepository').ClientRepository
+// const workOrderRepository = WorkOrderRepository
 
 
 Font.register({
@@ -28,7 +34,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         margin: 5,
-        marginLeft:30,
+        marginLeft: 30,
         padding: 1,
         flexGrow: 1,
         borderBottomWidth: 1,
@@ -105,9 +111,6 @@ const styles = StyleSheet.create({
 
 });
 
-const styleRoot = {
-    flexGrow: 1,
-}
 
 class PdfViewer extends React.Component {
 
@@ -124,16 +127,17 @@ class PdfViewer extends React.Component {
         //posiblemente le pase por url el id de la wo
         let id = this.props.match.params.id
         console.log(this.props.match.params.id)
-        WorkOrderRepository.getById(id)
+        workOrderRepository.getById(id)
             .then((res) => {
-                let wo = res
-                console.log('esto tiene wo y es moment? ',wo,  isMoment(wo.deliver_date))
+                let wo = new WorkOrder()
+                wo = res
+                console.log('esto tiene wo y es moment? ', wo)
                 this.setState({
                     wo
                 })
-                ClientRepository.getById(wo.client_id)
+                clientRepository.getById(wo.client_id)
                     .then((res) => {
-                        {
+                        
                             let client = res
                             console.log(client)
                             this.setState({
@@ -141,17 +145,17 @@ class PdfViewer extends React.Component {
                                 isLoading: false
                             })
                             console.log(this.state)
-                        }
+                        
                     })
             })
     }
     render() {
         const { wo, client, isLoading, status_date } = this.state
         if (isLoading) {
-            console.log("tiene esto los dos ",wo,client)
+            console.log("tiene esto los dos ", wo, client)
             return <div>cargando</div>
         }
-        console.log("renderizo ",wo,client)
+        console.log("renderizo ", wo, client)
         return (
             < PDFViewer style={{ width: '100%', height: '700px' }
             }>
@@ -174,15 +178,15 @@ class PdfViewer extends React.Component {
                             <View style={styles.sectionRow}>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Código de orden:</Text>
-                                    {wo.code!==null && <Text style={styles.valueText}> {wo.code}</Text>}
+                                    {wo.code !== null && <Text style={styles.valueText}> {wo.code}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Estado orden:</Text>
-                                    {wo.last_status!==null && <Text style={styles.valueText}>{wo.last_status}</Text>}
+                                    {wo.last_status !== null && <Text style={styles.valueText}>{wo.last_status}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Fecha de Ingreso:</Text>
-                                    {wo.admission_date !==null && <Text style={styles.valueText}> {isMoment(wo.admission_date)? moment(wo.admission_date).format('DD/MM/yyyy') : wo.admission_date }</Text>}
+                                    {wo.admission_date !== null && <Text style={styles.valueText}> {isMoment(wo.admission_date) ? moment(wo.admission_date).format('DD/MM/yyyy') : wo.admission_date}</Text>}
                                 </View>
 
                             </View>
@@ -201,17 +205,17 @@ class PdfViewer extends React.Component {
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Tel. 2:</Text>
-                                    {client.tel2!==null && <Text style={styles.valueText}>{client.tel2}</Text>}
+                                    {client.tel2 !== null && <Text style={styles.valueText}>{client.tel2}</Text>}
                                 </View>
                             </View>
                             <View style={styles.sectionRow}>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Mail:</Text>
-                                    {client.mail !==null && <Text style={styles.valueText}>{client.mail}</Text>}
+                                    {client.mail !== null && <Text style={styles.valueText}>{client.mail}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Mail 2:</Text>
-                                    {client.mail2 !==null && <Text style={styles.valueText}>{client.mail2}</Text>}
+                                    {client.mail2 !== null && <Text style={styles.valueText}>{client.mail2}</Text>}
                                 </View>
                             </View>
                             <View style={styles.sectionRow}>
@@ -226,45 +230,45 @@ class PdfViewer extends React.Component {
                             <View style={styles.sectionRow}>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Equipo: </Text>
-                                    {wo.equipment !==null && <Text style={styles.valueText}> {wo.equipment}</Text>}
+                                    {wo.equipment !== null && <Text style={styles.valueText}> {wo.equipment}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Marca: </Text>
-                                    {wo.brand !==null && <Text style={styles.valueText}> {wo.brand}</Text>}
+                                    {wo.brand !== null && <Text style={styles.valueText}> {wo.brand}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Modelo: </Text>
-                                    {wo.model !==null && <Text style={styles.valueText}> {wo.model} </Text>}
+                                    {wo.model !== null && <Text style={styles.valueText}> {wo.model} </Text>}
                                 </View>
                             </View>
                             <View style={styles.sectionCol}>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Nro Serie: </Text>
-                                    {wo.serial_number !==null && <Text style={styles.valueText}> {wo.serial_number}</Text>}
+                                    {wo.serial_number !== null && <Text style={styles.valueText}> {wo.serial_number}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Falla: </Text>
-                                    {wo.failure !==null && <Text style={styles.valueText}> {wo.failure}</Text>}
+                                    {wo.failure !== null && <Text style={styles.valueText}> {wo.failure}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Observaciones: </Text>
-                                    {wo.observation !==null && <Text style={styles.valueText}> {wo.observation}</Text>}
+                                    {wo.observation !== null && <Text style={styles.valueText}> {wo.observation}</Text>}
                                 </View>
                             </View>
                             <View style={styles.sectionRow}>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Fecha de entrega: </Text>
-                                    {wo.deliver_date !=null && <Text style={styles.valueText}>{isMoment(wo.deliver_date)?moment(wo.deliver_date).format('DD/MM/yyyy'): wo.deliver_date }</Text>}
+                                    {wo.deliver_date != null && <Text style={styles.valueText}>{isMoment(wo.deliver_date) ? moment(wo.deliver_date).format('DD/MM/yyyy') : wo.deliver_date}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Garantía: </Text>
-                                    {wo.warranty !==null && <Text style={styles.valueText}>{wo.warranty} Meses</Text>}
+                                    {wo.warranty !== null && <Text style={styles.valueText}>{wo.warranty} Meses</Text>}
                                 </View>
                             </View>
                             <View style={styles.sectionRow}>
                                 <View style={styles.sectionRow}>
                                     <Text style={[styles.itemText, { borderBottomWidth: 0, fontSize: 16, color: '#000000' }]}> IMPORTE FINAL: </Text>
-                                    {wo.final_amount !==null && <Text style={[styles.valueText, { fontSize: 16 }]}>${wo.final_amount}</Text>}
+                                    {wo.final_amount !== null && <Text style={[styles.valueText, { fontSize: 16 }]}>${wo.final_amount}</Text>}
                                 </View>
                             </View>
                             <View style={styles.sectionRow}>
@@ -274,7 +278,7 @@ class PdfViewer extends React.Component {
                             <View style={styles.sectionRow}>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Fecha actual: </Text>
-                                    {status_date !==null && <Text style={styles.valueText}> {status_date}</Text>}
+                                    {status_date !== null && <Text style={styles.valueText}> {status_date}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={{ color: 'white' }}>--------------------------</Text>

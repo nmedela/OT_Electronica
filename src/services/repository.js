@@ -1,86 +1,33 @@
-const historyRepository = require('./historyRepository').HistoryRepository
+// const historyRepository = require('./historyRepository').HistoryRepository
+import historyRepository from './historyRepository'
 const { WorkOrder } = require('./../domain/WorkOrder')
-const { Client } = require('./../domain/Client')
-const moment = require('moment')
 
-var idMainWorkOrder = 1
-var idMainClient = 1
-class ClientRepository {
-    constructor() {
-        this.clients = []
-        this.clients.push(
-            {
-                id: 0,
-                name: "Nicolas Medela",
-                tel: 12345678,
-                tel2: null,
-                mail: "nico@mail.com",
-                mail2: null,
-                direction: "Guzman 3327",
-                location: "Ricardo Rojas",
-            }
-        )
-    }
-
-    async create(client) {
-        client.id = idMainClient
-        const newClient = Client.fromObject(client) //TODO frrom objet o from json para que convierta el coso que llega
-        // newClient.id = idMainClient
-        // newClient.name = client.name
-        // newClient.tel = client.tel
-        // newClient.tel2 = client.tel2
-        // newClient.mail = client.mail
-        // newClient.mail2 = client.mail2
-        // newClient.direction = client.direction
-        // newClient.location = client.location
-
-        this.clients.push(newClient)
-        ++idMainClient
-        console.log(this.clients)
-        return newClient
-    }
-    async update(client) {
-        const newClient = Client.fromObject(client)
-        this.clients = this.clients.filter(client => client.id !== newClient.id)
-        this.clients.push(newClient)
-        console.log(this.clients)
-        return newClient
-    }
-
-    async getById(_id) {
-        console.log("Esto tiene el cliente id ", _id)
-        return this.clients.find(client => client.id == _id)
-    }
-    async getAll() {
-        return this.clients
-    }
-}
-
+var idMainWorkOrder = 0
 class WorkOrderRepository {
     constructor() {
         this.workOrders = []
-        this.workOrders.push({
-            id: 0,
-            code: 0,
-            client_id: 0,
-            admission_date: moment(1594603281789).format('DD/MM/yyyy'),
-            equipment: 0,
-            brand: "sony",
-            model: "algo",
-            serial_number: "98172938",
-            failure: "falla los leds",
-            last_status: 0,
-            // this.observation : null
-            deliver_date: null,
-            warranty: null,
-            final_amount: null,
-            cancel: false,
-        })
+        // this.workOrders.push({
+        //     id: 0,
+        //     code: 0,
+        //     client_id: 0,
+        //     admission_date: moment(1594603281789).format('DD/MM/yyyy'),
+        //     equipment: 0,
+        //     brand: "sony",
+        //     model: "algo",
+        //     serial_number: "98172938",
+        //     failure: "falla los leds",
+        //     last_status: 0,
+        //     // this.observation : null
+        //     deliver_date: null,
+        //     warranty: null,
+        //     final_amount: null,
+        //     cancel: false,
+        // })
     }
 
     async create(wo, history) {
         wo.id = idMainWorkOrder
-        if (wo.last_status == 3) {
+        if (wo.last_status === 3) {
             console.log("Esto tiene last status ", history.date_status)
             wo.deliver_date = history.date_status
             console.log("Esto tiene last el newWorkOrder ", wo)
@@ -110,7 +57,7 @@ class WorkOrderRepository {
         return newWorkOrder
     }
     async update(newWorkOrder, history) {
-        if (newWorkOrder.last_status == 3) {
+        if (newWorkOrder.last_status === 3) {
             console.log("Esto tiene last status ", history.date_status)
             newWorkOrder.deliver_date = history.date_status
             console.log("Esto tiene last el newWorkOrder ", newWorkOrder)
@@ -134,4 +81,6 @@ class WorkOrderRepository {
     }
 }
 
-module.exports = { WorkOrderRepository: new WorkOrderRepository(), ClientRepository: new ClientRepository() }
+const workOrderRepository = new WorkOrderRepository()
+export default workOrderRepository
+// module.exports = { WorkOrderRepository: new WorkOrderRepository()}

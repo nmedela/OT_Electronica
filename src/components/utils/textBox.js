@@ -7,7 +7,7 @@ class TextBox extends React.Component {
         super(props)
         this.state = (
             {
-                value: null
+                value: ''
             }
         )
         this.handleBlur = this.handleBlur.bind(this)
@@ -36,17 +36,6 @@ class TextBox extends React.Component {
         this.props.handleBlur(this.state.value, this.props.name)
     }
     render() {
-        const styleTextField = {
-            marginTop: '16px',
-            marginLeft: '1px',
-            width: '100%',
-        }
-        const styleTextDisplay = {
-            // display: idTypeChange.some(v => v == this.state.statusValue) || this.state.update ? "inline-flex" : "none",
-            marginTop: '16px',
-            marginLeft: '1px',
-            width: '100%',
-        }
         return (
             <div>
                 <TextField

@@ -1,6 +1,5 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -8,11 +7,8 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Switch from '@material-ui/core/Switch';
 import InputLabel from '@material-ui/core/InputLabel';
-import { ClientRepository } from './../../services/repository'
-import TextBox from './../utils/textBox'
-
-// const clientRespository = new ClientRepository()
-
+// const clientRepository = require('./../../services/clientRepository').ClientRepository
+import clientRepository from './../../services/clientRepository'
 class FormClient extends React.Component {
 
     constructor(props) {
@@ -21,14 +17,14 @@ class FormClient extends React.Component {
             client:
             {
                 id: null,
-                name: null,
-                tel: null,
-                tel2: null,
-                mail: null,
-                mail2: null,
-                direction: null,
-                location: null,
-                description: null,
+                name: '',
+                tel: '',
+                tel2: '',
+                mail: '',
+                mail2: '',
+                direction: '',
+                location: '',
+                description:'',
             },
             update: false,
             isLoading: false,
@@ -60,7 +56,7 @@ class FormClient extends React.Component {
         }
     }
     getClient(id) {
-        let client = ClientRepository.getById(id)
+        let client = clientRepository.getById(id)
         return client
     }
     setFieldsClient(client) {
@@ -103,17 +99,12 @@ class FormClient extends React.Component {
     }
 
     insertClient = () => {
-        return ClientRepository.create(this.state.client)
+        return clientRepository.create(this.state.client)
     }
     updatetClient = () => {
-        return ClientRepository.update(this.state.client)
+        return clientRepository.update(this.state.client)
     }
     render() {
-        const styleFormTextField = {
-            '& > *': {
-                width: '30ch',
-            },
-        }
         const styleTextField = {
             width: '100%',
         }
@@ -137,7 +128,8 @@ class FormClient extends React.Component {
             )
         }
         return (
-            <form style={stylePaper} noValidate autoComplete="off">
+            <div>
+            {/* // <form style={stylePaper} noValidate autoComplete="off"> */}
                 {/* <Paper style={stylePaper}> */}
                     <Grid container justify='center' style={styleRoot} spacing={1} >
                         <Grid item xs={12} sm={4}>
@@ -255,7 +247,8 @@ class FormClient extends React.Component {
                         </Grid>
                     </Grid>
                 {/* </Paper> */}
-            </form>
+            {/* </form> */}
+            </div>
         )
     }
 
