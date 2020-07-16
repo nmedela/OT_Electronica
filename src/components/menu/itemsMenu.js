@@ -51,7 +51,7 @@ const logout = {
     icon: 'close',
     description: 'Cerrar sesión',
     path: '/logout',
-    component:  <NewWorkOrder/>,
+    component:  <Settings/>,
     subMenu: [],
 }
 

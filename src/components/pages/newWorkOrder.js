@@ -20,7 +20,8 @@ class NewWorkOrder extends React.Component {
             workOrder: null,
             generate: false,
         }
-   
+        this.refresh=this.refresh.bind(this)
+
     }
 
     handleGenerateClient = () => {
@@ -32,12 +33,11 @@ class NewWorkOrder extends React.Component {
 
     handleSubmit = () => {
         console.log("Apreté")
-        return window.location='/WO'
-        
+        this.refresh()
     }
-
-    handleClean = () => {
-
+    
+    refresh = () => {
+        return window.location = '/WO'
     }
     handleChange = (event) => {
         console.log('cambio')
@@ -53,12 +53,12 @@ class NewWorkOrder extends React.Component {
             flexGrow: 1,
             marginLeft: '1px'
         }
-  
+
         return (
             <div>
                 <Grid container justify='center' style={styleRoot} spacing={2} >
                     <Grid item xs={12}>
-                        <FormWorkOrder new workOrder={this.state.workOrder} generateWorkOrder={this.handleGenerateWorkOrder} generate={this.state.generate} />
+                        <FormWorkOrder new workOrder={this.state.workOrder} generateWorkOrder={this.handleGenerateWorkOrder} generate={this.state.generate} refresh={this.refresh}/>
                     </Grid>
                 </Grid>
             </div>

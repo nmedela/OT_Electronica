@@ -23,21 +23,24 @@ class ClientRepository {
     }
 
     async create(client) {
-        const newClient = new Client() //TODO frrom objet o from json para que convierta el coso que llega
-        newClient.id = idMainClient
-        newClient.name = client.name
-        newClient.tel = client.tel
-        newClient.tel2 = client.tel2
-        newClient.mail = client.mail
-        newClient.mail2 = client.mail2
-        newClient.direction = client.direction
-        newClient.location = client.location
+        client.id = idMainClient
+        const newClient = Client.fromObject(client) //TODO frrom objet o from json para que convierta el coso que llega
+        // newClient.id = idMainClient
+        // newClient.name = client.name
+        // newClient.tel = client.tel
+        // newClient.tel2 = client.tel2
+        // newClient.mail = client.mail
+        // newClient.mail2 = client.mail2
+        // newClient.direction = client.direction
+        // newClient.location = client.location
+
         this.clients.push(newClient)
         ++idMainClient
         console.log(this.clients)
         return newClient
     }
-    async update(newClient) {
+    async update(client) {
+        const newClient = Client.fromObject(client)
         this.clients = this.clients.filter(client => client.id !== newClient.id)
         this.clients.push(newClient)
         console.log(this.clients)
@@ -74,14 +77,14 @@ class WorkOrderRepository {
             cancel: false,
         })
     }
-    
+
     async create(wo, history) {
         wo.id = idMainWorkOrder
         if (wo.last_status == 3) {
-           console.log("Esto tiene last status ", history.date_status)
-           wo.deliver_date = history.date_status
-           console.log("Esto tiene last el newWorkOrder ", wo)
-       }
+            console.log("Esto tiene last status ", history.date_status)
+            wo.deliver_date = history.date_status
+            console.log("Esto tiene last el newWorkOrder ", wo)
+        }
         const newWorkOrder = WorkOrder.fromObject(wo)
         // const newWorkOrder = new WorkOrder()
         // newWorkOrder.code = wo.code

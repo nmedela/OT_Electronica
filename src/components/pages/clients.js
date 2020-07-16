@@ -24,7 +24,8 @@ class Clients extends React.Component {
                 <Grid container justify='center' style={styleRoot} spacing={2} >
                    
                     <Grid item xs={12}>
-                        <FormClient/>
+                        poner lista de clientes
+                        <FormClient new/>
                     </Grid>              
                 </Grid>
             </div>

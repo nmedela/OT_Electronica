@@ -22,6 +22,7 @@ class MyItem extends React.Component {
             open: false,
             isLoading: true
         }
+        this.refresh = this.refresh.bind(this)
     }
     componentWillMount() {
         this.setState({
@@ -40,6 +41,9 @@ class MyItem extends React.Component {
 
     getWorkOrderByFilter = () => {
         //TODO HACER BUSQUEDA POR FILTRO PARA LLENAR LA LISTA
+    }
+    refresh = () => {
+        this.props.refresh()
     }
     render() {
 
@@ -68,7 +72,7 @@ class MyItem extends React.Component {
                     </ListItemSecondaryAction>
                 </ListItem>
                 <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-                    <FormWorkOrder id={this.props.id} />
+                    <FormWorkOrder refresh={this.refresh} id={this.props.id} />
                 </Collapse>
             </div>
 

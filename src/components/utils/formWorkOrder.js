@@ -84,6 +84,7 @@ class FormWorkOrder extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleObservationChange = this.handleObservationChange.bind(this)
+        this.refresh = this.refresh.bind(this)
         // this.handleChangeValue = this.handleChangeValue.bind(this)
     }
 
@@ -105,6 +106,7 @@ class FormWorkOrder extends React.Component {
             // })
         }
     }
+  
     getWorkOrder = (id) => {
         return WorkOrderRepository.getById(id)
     }
@@ -258,9 +260,12 @@ class FormWorkOrder extends React.Component {
         this.setState({
             openConfirm: false,
         })
-        return window.location='/WO'
+        this.refresh()
     }
-
+    refresh = () => {
+        console.log("entre en refresh")
+        this.props.refresh()
+    }
     render() {
         const { wo } = this.state
         const styleFormTextField = {

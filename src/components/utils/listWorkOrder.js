@@ -11,6 +11,7 @@ class ListWorkOrders extends React.Component {
             workOrders: null,
             isLoading: true
         }
+        this.refresh = this.refresh.bind(this)
     }
     componentWillMount() {
         console.log("Esto tiene que haber en las props ", this.props)
@@ -29,6 +30,10 @@ class ListWorkOrders extends React.Component {
             }),
         );
     }
+
+    refresh = () => {
+        this.props.refresh()
+    }
     render() {
         const styleRoot = {
             width: '100%',
@@ -46,7 +51,7 @@ class ListWorkOrders extends React.Component {
                             {/* {this.generate( */}
                             {!this.state.isLoading && this.state.workOrders.map((wo) => {
                                 console.log("Esto tiene que haber en la wo ", wo)
-                                return <MyItem id={wo.id} onWO={wo} status={wo.last_status} />
+                                return <MyItem id={wo.id} onWO={wo} status={wo.last_status} refresh={this.refresh}/>
                             }
                             )
                             }

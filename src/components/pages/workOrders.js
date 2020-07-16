@@ -42,16 +42,14 @@ class WorkOrders extends React.Component {
             workOrders: [],
             isLoading: true
         }
+        this.refresh = this.refresh.bind(this)
     }
     componentWillMount() {
         //Aca está bueno traer una vista en vez de todas las ordenes, la vista tendría informacion 
         //basica para mostrar en la list
         this.getWorkOrders()
             .then((res) => {
-                this.setState({
-                    workOrders: res,
-                    isLoading: false
-                })
+                this.setFields(res)
             })
     }
     resetFilter = () => {
@@ -77,6 +75,21 @@ class WorkOrders extends React.Component {
     };
     getWorkOrders = () => {
         return WorkOrderRepository.getAll()
+    }
+    setFields = (workOrders) => {
+        this.setState({
+            workOrders,
+            isLoading: false
+        })
+    }
+    refresh = () => {
+        this.setState({
+            isLoading: true,
+        })
+        this.getWorkOrders()
+            .then((res) => {
+                this.setFields(res)
+            })
     }
     render() {
         if (this.state.isLoading) {
@@ -135,7 +148,7 @@ class WorkOrders extends React.Component {
                                 variant="outlined" />
                         </Grid>
                         <Grid item xs={12}>
-                            <ListWorkOrder workOrders={this.state.workOrders} />
+                            <ListWorkOrder refresh={this.refresh} workOrders={this.state.workOrders} />
                         </Grid>
                     </Grid>
                 </Paper>
