@@ -28,8 +28,12 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { WorkOrderRepository } from './../../services/repository'
-import { HistoryRepository } from './../../services/repository'
-import ReactToPdf from "react-to-pdf";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { Link } from 'react-router-dom'
 
 const idTypeDelivery = [3]
 const idTypeChange = [1, 2, 3, 4, 5, 6]
@@ -49,7 +53,7 @@ class FormWorkOrder extends React.Component {
                 id: null,
                 code: null,
                 client_id: null,
-                admission_date: moment.now(),
+                admission_date: moment(),
                 equipment: 0,
                 brand: null,
                 model: null,
@@ -63,7 +67,7 @@ class FormWorkOrder extends React.Component {
             },
             // status_value: 0,
             statusTitle: null,
-            status_date: moment.now(),
+            status_date: moment(),
             observation: null,
             isLoading: false,
             inProgress: false,
@@ -72,6 +76,7 @@ class FormWorkOrder extends React.Component {
             new: this.props.new,
             snackBarOpen: false,
             messageResult: null,
+            openConfirm: false,
 
         }
         // this.handleChange = this.handleChange.bind(this)
@@ -83,6 +88,7 @@ class FormWorkOrder extends React.Component {
     }
 
     componentWillMount() {
+        console.log("Esto tienen los states ", this.state)
         if (!this.props.new) {
             this.setState({ isLoading: true, inProgress: true })
             this.getWorkOrder(this.props.id)
@@ -103,6 +109,8 @@ class FormWorkOrder extends React.Component {
         return WorkOrderRepository.getById(id)
     }
     setFields = (wo) => {
+        console.log('Esto tiene el admission date ', moment(wo.admission_date))
+        // wo.admission_date = moment(wo.admission_date)
         this.setState({
             wo
             // id: wo.id,
@@ -225,11 +233,15 @@ class FormWorkOrder extends React.Component {
 
     checkComplete = (res) => {
         if (res) {
+            let wo = res
             this.setState({
+                wo,
                 inProgress: false,
                 snackBarOpen: true,
                 messageResult: "Se ingresó correctamente",
+                openConfirm: true,
             })
+
         }
 
     }
@@ -239,11 +251,15 @@ class FormWorkOrder extends React.Component {
         this.setState({
             snackBarOpen: false,
             isLoading: false,
-
         })
 
     }
-
+    handleCloseToConfirm = () => {
+        this.setState({
+            openConfirm: false,
+        })
+        return window.location='/WO'
+    }
 
     render() {
         const { wo } = this.state
@@ -290,7 +306,7 @@ class FormWorkOrder extends React.Component {
             <div>
 
                 <form style={styleFormTextField} noValidate autoComplete="off">
-                  
+
                     {!this.state.isLoading && <Paper style={stylePaper}>
                         <Backdrop open={this.state.isLoading || this.state.inProgress} style={{
                             zIndex: 99,
@@ -298,7 +314,27 @@ class FormWorkOrder extends React.Component {
                         }}>
                             <CircularProgress color="inherit" />
                         </Backdrop>
-
+                        <Dialog
+                            open={this.state.openConfirm}
+                            onClose={this.handleCloseToConfirm}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">{"Atención"}</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    Desea generar pdf correspondiente a la orden de trabajo?</DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={this.handleCloseToConfirm} color="primary">
+                                    No          </Button>
+                                <Button color="primary" autoFocus>
+                                    <Link to={`/lector/${this.state.wo.id}`} style={{ color: 'inherit' }} >
+                                        Si
+                            </Link>
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
 
                         <Grid container justify='center' style={styleRoot} spacing={2} >
 

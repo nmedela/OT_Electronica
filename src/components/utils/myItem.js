@@ -12,7 +12,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import FormWorkOrder from './formWorkOrder'
 import { status } from './../../domain/status'
 import { ClientRepository } from './../../services/repository'
-
+import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom'
 class MyItem extends React.Component {
 
     constructor(props) {
@@ -48,17 +48,19 @@ class MyItem extends React.Component {
                 <ListItem button onClick={this.handleClick} style={{ marginTop: '20px' }}>
                     <ListItemAvatar>
                         <Avatar>
-                            <i class="material-icons" style={{ color: status.find(s=>s.id == this.props.onWO.last_status).color }}>{status.find(s=>s.id == this.props.onWO.last_status).icon}</i>
+                            <i class="material-icons" style={{ color: status.find(s => s.id == this.props.onWO.last_status).color }}>{status.find(s => s.id == this.props.onWO.last_status).icon}</i>
                         </Avatar>
                     </ListItemAvatar>
                     {this.state.open ? <ExpandLess /> : <ExpandMore />}
                     <ListItemText
-                        primary={`${this.props.onWO.client_id} $${this.props.onWO.final_amount?this.props.onWO.final_amount: '-' }`}
-                        secondary={this.props.onWO.brand + ' - '  + this.props.onWO.failure }
+                        primary={`${this.props.onWO.client_id} $${this.props.onWO.final_amount ? this.props.onWO.final_amount : '-'}`}
+                        secondary={this.props.onWO.brand + ' - ' + this.props.onWO.failure}
                     />
                     <ListItemSecondaryAction>
                         <IconButton edge="end" aria-label="delete">
-                            <i class="material-icons">get_app</i>
+                            <Link to={`/lector/${this.props.onWO.id}`} style={{ color: 'gray' }} >
+                                <i class="material-icons">get_app</i>
+                            </Link>
                         </IconButton>
                         <IconButton edge="end" aria-label="delete">
                             <i class="material-icons" style={{ color: 'red' }}>delete</i>

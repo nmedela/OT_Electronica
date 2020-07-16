@@ -1,4 +1,5 @@
 const { History } = require('./../domain/History')
+const moment = require('moment')
 
 var idMainHistory = 1
 class HistoryRepository {
@@ -8,23 +9,23 @@ class HistoryRepository {
             {
                 id: 0,
                 id_wo: 0,
-                date_status: 1594603281789,
+                date_status: moment(1594603281789).format('DD/MM/yyyy'),
                 id_status: 0,
                 observation: "nada para observar",
             }
         )
     }
 
-    async create(history) {
+    async create(newHistory) {
         console.log("Asi esta el mainHsitory ", idMainHistory)
-        const newHistory = new History()
-        newHistory.id = idMainHistory
-        newHistory.id_wo = history.id_wo
-        newHistory.date_status = history.date_status
-        newHistory.id_status = history.id_status
-        newHistory.date_status = history.date_status
-        newHistory.observation = history.observation
-        this.history.push(newHistory)
+        // const newHistory = new History()
+        // newHistory.id = idMainHistory
+        // newHistory.id_wo = history.id_wo
+        // newHistory.id_status = history.id_status
+        // newHistory.date_status = moment(history.date_status).format('DD/MM/yyyy')
+        // newHistory.observation = history.observation
+        const history = History.fromObject(newHistory) 
+        this.history.push(history)
         console.log(this.history)
         // if (newHistory.last_status == 3) {
         //     WorkOrderRepository.getById(newHistory.id_wo)

@@ -19,6 +19,7 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import { itemsMenu } from './itemsMenu';
+import PdfViewer from './../pages/pdfViewer'
 import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom'
 
 const drawerWidth = 240;
@@ -225,13 +226,32 @@ export default function PersistentDrawerLeft() {
               to="/WO/new" />
             {
               itemsMenu.map((item) => {
-                return (<Route
-                  path={`${item.path}`}
-                  render={() => { 
-                    setTitle(item.title)
-                    return item.component }} />)
+                return (
+                  <Route
+                  
+                    path={`${item.path}`}
+                    render={() => {
+                      setTitle(item.title)
+                      return item.component
+                    }} />
+                )
               })
             }
+            <Route
+              path='/lector/:id'
+              render={(props) => {
+                return <PdfViewer
+                {...props}
+                  wo={{
+                    code: '123456',
+                    last_status: 'Entregado',
+                  }}
+                  client={{
+                    name: 'Nico',
+                    direction: 'guzman 3327',
+                    location: 'Ricardo Rojas'
+                  }} />
+              }} />
           </Switch>
 
         </main>

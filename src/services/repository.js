@@ -1,6 +1,7 @@
 const historyRepository = require('./historyRepository').HistoryRepository
 const { WorkOrder } = require('./../domain/WorkOrder')
 const { Client } = require('./../domain/Client')
+const moment = require('moment')
 
 var idMainWorkOrder = 1
 var idMainClient = 1
@@ -59,7 +60,7 @@ class WorkOrderRepository {
             id: 0,
             code: 0,
             client_id: 0,
-            admission_date: 1594603281789,
+            admission_date: moment(1594603281789).format('DD/MM/yyyy'),
             equipment: 0,
             brand: "sony",
             model: "algo",
@@ -73,24 +74,30 @@ class WorkOrderRepository {
             cancel: false,
         })
     }
-
+    
     async create(wo, history) {
-        const newWorkOrder = new WorkOrder()
-        newWorkOrder.id = idMainWorkOrder
-        newWorkOrder.code = wo.code
-        newWorkOrder.client_id = wo.client_id
-        newWorkOrder.admission_date = wo.admission_date
-        newWorkOrder.equipment = wo.equipment
-        newWorkOrder.brand = wo.brand
-        newWorkOrder.model = wo.model
-        newWorkOrder.serial_number = wo.serial_number
-        newWorkOrder.failure = wo.failure
-        newWorkOrder.last_status = wo.last_status
-        // this.observation = null
-        newWorkOrder.deliver_date = wo.deliver_date
-        newWorkOrder.warranty = wo.warranty
-        newWorkOrder.final_amount = wo.final_amount
-        newWorkOrder.cancel = wo.cancel
+        wo.id = idMainWorkOrder
+        if (wo.last_status == 3) {
+           console.log("Esto tiene last status ", history.date_status)
+           wo.deliver_date = history.date_status
+           console.log("Esto tiene last el newWorkOrder ", wo)
+       }
+        const newWorkOrder = WorkOrder.fromObject(wo)
+        // const newWorkOrder = new WorkOrder()
+        // newWorkOrder.code = wo.code
+        // newWorkOrder.client_id = wo.client_id
+        // newWorkOrder.admission_date = moment(wo.admission_date).format('DD/MM/yyyy')
+        // newWorkOrder.equipment = wo.equipment
+        // newWorkOrder.brand = wo.brand
+        // newWorkOrder.model = wo.model
+        // newWorkOrder.serial_number = wo.serial_number
+        // newWorkOrder.failure = wo.failure
+        // newWorkOrder.last_status = wo.last_status
+        // // this.observation = null
+        // newWorkOrder.deliver_date = moment(wo.deliver_date).format('DD/MM/yyyy')
+        // newWorkOrder.warranty = wo.warranty
+        // newWorkOrder.final_amount = wo.final_amount
+        // newWorkOrder.cancel = wo.cancel
         //TODO llenar con el parametro wo el newWo 
         this.workOrders.push(newWorkOrder)
         history.id_wo = idMainWorkOrder
@@ -101,11 +108,14 @@ class WorkOrderRepository {
     }
     async update(newWorkOrder, history) {
         if (newWorkOrder.last_status == 3) {
-            newWorkOrder.deliver_date = history.last_status
+            console.log("Esto tiene last status ", history.date_status)
+            newWorkOrder.deliver_date = history.date_status
+            console.log("Esto tiene last el newWorkOrder ", newWorkOrder)
         }
-        this.workOrders = this.workOrders.filter(workOrder => workOrder.id !== newWorkOrder.id)
-        this.workOrders.push(newWorkOrder)
-        // HistoryRepository.create(history)
+        const wo = WorkOrder.fromObject(newWorkOrder)
+        this.workOrders = this.workOrders.filter(workOrder => workOrder.id !== wo.id)
+        this.workOrders.push(wo)
+
         historyRepository.create(history)
         console.log(this.workOrders)
         return newWorkOrder
