@@ -47,6 +47,11 @@ class ClientRepository {
         console.log("Esto tiene el cliente id ", _id)
         return this.clients.find(client => client.id === _id)
     }
+    async getNameById(_id) {
+        console.log("Esto tiene el cliente id ", _id)
+        let client = this.clients.find(client => client.id === _id)
+        return client.name
+    }
     async getAll() {
         return this.clients
     }

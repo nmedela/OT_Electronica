@@ -31,7 +31,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Link } from 'react-router-dom'
-import workOrderRepository from './../../services/repository'
+import workOrderRepository from './../../services/workOrderRepository'
 // const workOrderRepository = require('./../../services/repository').WorkOrderRepository
 
 const idTypeDelivery = [3]
@@ -471,6 +471,7 @@ class FormWorkOrder extends React.Component {
                                     handleBlur={this.handleInputChange}
                                     disabled={wo.deliver_date && !this.state.update}
                                     value={wo.warranty}
+                                    type='number'
                                     variant="outlined"
                                     InputProps={{
                                         startAdornment: <InputAdornment position="start">Meses</InputAdornment>,

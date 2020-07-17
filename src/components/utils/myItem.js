@@ -10,23 +10,33 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import FormWorkOrder from './formWorkOrder'
 import { status } from './../../domain/status'
-import {Link } from 'react-router-dom'
+import { equipments } from './../../domain/equipments'
+import clientRepository from './../../services/clientRepository'
+
+
+import { Link } from 'react-router-dom'
 class MyItem extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = {
             id: null,
+            client_name: null,
             open: false,
             isLoading: true
         }
         this.refresh = this.refresh.bind(this)
     }
     componentWillMount() {
-        this.setState({
-            isLoading: false,
-            id: this.props.id
-        })
+        this.getClientName(this.props.onWO.client_id)
+            .then((res) => {
+                let client_name = res
+                this.setState({
+                    client_name,
+                    isLoading: false,
+                    id: this.props.id
+                })
+            })
     }
     handleChange = (event) => {
         console.log('cambio')
@@ -36,7 +46,9 @@ class MyItem extends React.Component {
             open: !this.state.open
         })
     }
-
+    getClientName = (id) => {
+        return clientRepository.getNameById(id)
+    }
     getWorkOrderByFilter = () => {
         //TODO HACER BUSQUEDA POR FILTRO PARA LLENAR LA LISTA
     }
@@ -44,6 +56,10 @@ class MyItem extends React.Component {
         this.props.refresh()
     }
     render() {
+        let equipment = equipments.find(s => s.id === this.props.onWO.equipment).title
+        if (this.state.isLoading) {
+            return <div>Está cargando</div>
+        }
 
         return (
             <div>
@@ -55,8 +71,8 @@ class MyItem extends React.Component {
                     </ListItemAvatar>
                     {this.state.open ? <ExpandLess /> : <ExpandMore />}
                     <ListItemText
-                        primary={`${this.props.onWO.client_id} $${this.props.onWO.final_amount ? this.props.onWO.final_amount : '-'}`}
-                        secondary={this.props.onWO.brand + ' - ' + this.props.onWO.failure}
+                        primary={`${this.state.client_name} $${this.props.onWO.final_amount ? this.props.onWO.final_amount : '-'}`}
+                        secondary={`${equipment} ${this.props.onWO.brand} - ${this.props.onWO.failure}`}
                     />
                     <ListItemSecondaryAction>
                         <IconButton edge="end" aria-label="delete">

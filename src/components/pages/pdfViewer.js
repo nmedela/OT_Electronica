@@ -2,17 +2,12 @@ import React from 'react'
 import { Document, Page, Text, View, StyleSheet, PDFViewer, Image, Font } from "@react-pdf/renderer";
 import path from './../../fonts/Roboto-Regular.ttf'
 import imagen from './../../logoEmpresa.png'
-// import { ClientRepository } from './../../services/clientRepository'
 import moment, { isMoment } from "moment";
 import { WorkOrder } from '../../domain/WorkOrder';
-// const { ClientRepository } = require('./../../services/clientRepository')
 import clientRepository from './../../services/clientRepository'
-import workOrderRepository from './../../services/repository'
-// const workOrderRepository = require('./../../services/repository').WorkOrderRepository
-// import  {WorkOrderRepository}  from './../../services/repository'
-// const clientRepository = require('./../../services/clientRepository').ClientRepository
-// const workOrderRepository = WorkOrderRepository
-
+import workOrderRepository from './../../services/workOrderRepository'
+import { status } from './../../domain/status'
+import { equipments } from './../../domain/equipments'
 
 Font.register({
     family: 'Roboto',
@@ -151,6 +146,8 @@ class PdfViewer extends React.Component {
     }
     render() {
         const { wo, client, isLoading, status_date } = this.state
+        // let equipmentName = equipments.find(s => s.id === wo.equipment).title
+        // let statusName = status.find(s => s.id === wo.last_status).title
         if (isLoading) {
             console.log("tiene esto los dos ", wo, client)
             return <div>cargando</div>
@@ -182,7 +179,8 @@ class PdfViewer extends React.Component {
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Estado orden:</Text>
-                                    {wo.last_status !== null && <Text style={styles.valueText}>{wo.last_status}</Text>}
+                                    {/* {wo.last_status !== null && <Text style={styles.valueText}>{wo.last_status}</Text>} */}
+                                    {wo.last_status !== null && <Text style={styles.valueText}>{ status.find(s => s.id === wo.last_status).title}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Fecha de Ingreso:</Text>
@@ -230,7 +228,8 @@ class PdfViewer extends React.Component {
                             <View style={styles.sectionRow}>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Equipo: </Text>
-                                    {wo.equipment !== null && <Text style={styles.valueText}> {wo.equipment}</Text>}
+                                    {/* {wo.equipment !== null && <Text style={styles.valueText}> {wo.equipment}</Text>} */}
+                                    {wo.equipment !== null && <Text style={styles.valueText}> {equipments.find(s => s.id === wo.equipment).title}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Marca: </Text>

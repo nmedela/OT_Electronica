@@ -14,9 +14,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-// import { WorkOrderRepository } from '../../services/repository';
-import workOrderRepository from './../../services/repository'
-// const workOrderRepository = require('./../../services/repository').WorkOrderRepository
+import workOrderRepository from './../../services/workOrderRepository'
 
 const statusList = [{ id: -1, title: "Todos" }, ...status]
 const styleTextField = {

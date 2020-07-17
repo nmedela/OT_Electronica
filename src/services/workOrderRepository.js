@@ -1,6 +1,6 @@
 // const historyRepository = require('./historyRepository').HistoryRepository
 import historyRepository from './historyRepository'
-const { WorkOrder } = require('./../domain/WorkOrder')
+const { WorkOrder } = require('../domain/WorkOrder')
 
 var idMainWorkOrder = 0
 class WorkOrderRepository {
