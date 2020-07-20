@@ -28,9 +28,11 @@ class MyItem extends React.Component {
         this.refresh = this.refresh.bind(this)
     }
     componentWillMount() {
+        console.log(this.props.onWO.client_id)
         this.getClientName(this.props.onWO.client_id)
             .then((res) => {
-                let client_name = res
+                console.log("esto tiene nombre ", res.data[0].name)
+                let client_name = res.data[0].name
                 this.setState({
                     client_name,
                     isLoading: false,
@@ -56,7 +58,7 @@ class MyItem extends React.Component {
         this.props.refresh()
     }
     render() {
-        let equipment = equipments.find(s => s.id === this.props.onWO.equipment).title
+        let equipment = equipments.find(s => s.id === this.props.onWO.equipment_id).title
         if (this.state.isLoading) {
             return <div>Está cargando</div>
         }

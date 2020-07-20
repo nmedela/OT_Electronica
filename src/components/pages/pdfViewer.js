@@ -125,7 +125,7 @@ class PdfViewer extends React.Component {
         workOrderRepository.getById(id)
             .then((res) => {
                 let wo = new WorkOrder()
-                wo = res
+                wo = res.data[0]
                 console.log('esto tiene wo y es moment? ', wo)
                 this.setState({
                     wo
@@ -133,7 +133,7 @@ class PdfViewer extends React.Component {
                 clientRepository.getById(wo.client_id)
                     .then((res) => {
                         
-                            let client = res
+                            let client = res.data[0]
                             console.log(client)
                             this.setState({
                                 client,
@@ -229,7 +229,7 @@ class PdfViewer extends React.Component {
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Equipo: </Text>
                                     {/* {wo.equipment !== null && <Text style={styles.valueText}> {wo.equipment}</Text>} */}
-                                    {wo.equipment !== null && <Text style={styles.valueText}> {equipments.find(s => s.id === wo.equipment).title}</Text>}
+                                    {wo.equipment_id !== null && <Text style={styles.valueText}> {equipments.find(s => s.id === wo.equipment_id).title}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Marca: </Text>
@@ -251,7 +251,7 @@ class PdfViewer extends React.Component {
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Observaciones: </Text>
-                                    {wo.observation !== null && <Text style={styles.valueText}> {wo.observation}</Text>}
+                                    {wo.last_observation !== null && <Text style={styles.valueText}> {wo.last_observation}</Text>}
                                 </View>
                             </View>
                             <View style={styles.sectionRow}>

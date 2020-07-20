@@ -1,5 +1,7 @@
 // const historyRepository = require('./historyRepository').HistoryRepository
 import historyRepository from './historyRepository'
+import config from './../config'
+import axios from 'axios';
 const { WorkOrder } = require('../domain/WorkOrder')
 
 var idMainWorkOrder = 0
@@ -25,14 +27,15 @@ class WorkOrderRepository {
         // })
     }
 
-    async create(wo, history) {
-        wo.id = idMainWorkOrder
-        if (wo.last_status === 3) {
-            console.log("Esto tiene last status ", history.date_status)
-            wo.deliver_date = history.date_status
-            console.log("Esto tiene last el newWorkOrder ", wo)
-        }
-        const newWorkOrder = WorkOrder.fromObject(wo)
+    async create(wo, date_change) {
+        return axios.post(`${config.url}:${config.port}/wo/`,{wo,date_change})
+        // wo.id = idMainWorkOrder
+        // if (wo.last_status === 3) {
+        //     console.log("Esto tiene last status ", history.date_status)
+        //     wo.deliver_date = history.date_status
+        //     console.log("Esto tiene last el newWorkOrder ", wo)
+        // }
+        // const newWorkOrder = WorkOrder.fromObject(wo)
         // const newWorkOrder = new WorkOrder()
         // newWorkOrder.code = wo.code
         // newWorkOrder.client_id = wo.client_id
@@ -49,12 +52,12 @@ class WorkOrderRepository {
         // newWorkOrder.final_amount = wo.final_amount
         // newWorkOrder.cancel = wo.cancel
         //TODO llenar con el parametro wo el newWo 
-        this.workOrders.push(newWorkOrder)
-        history.id_wo = idMainWorkOrder
-        historyRepository.create(history)
-        console.log(this.workOrders)
-        ++idMainWorkOrder
-        return newWorkOrder
+        // this.workOrders.push(newWorkOrder)
+        // history.id_wo = idMainWorkOrder
+        // historyRepository.create(history)
+        // console.log(this.workOrders)
+        // ++idMainWorkOrder
+        // return newWorkOrder
     }
     async update(newWorkOrder, history) {
         if (newWorkOrder.last_status === 3) {
@@ -72,12 +75,10 @@ class WorkOrderRepository {
     }
 
     async getById(_id) {
-        console.log("Le pido el id ", _id)
-        console.log("Entre el getByID", this.workOrders)
-        return this.workOrders.find(workOrder => workOrder.id == _id)
+       return axios.get(`${config.url}:${config.port}/wo/${_id}`)
     }
     async getAll() {
-        return this.workOrders
+        return axios.get(`${config.url}:${config.port}/wo/all`)
     }
 }
 

@@ -49,7 +49,8 @@ class WorkOrders extends React.Component {
         //basica para mostrar en la list
         this.getWorkOrders()
             .then((res) => {
-                this.setFields(res)
+                console.log("Esto trae el getWorkOrders",res.data)
+                this.setFields(res.data)
             })
     }
     resetFilter = () => {
@@ -88,7 +89,8 @@ class WorkOrders extends React.Component {
         })
         this.getWorkOrders()
             .then((res) => {
-                this.setFields(res)
+                console.log("Esto trae el getWorkOrders",res.data)
+                this.setFields(res.data)
             })
     }
     render() {

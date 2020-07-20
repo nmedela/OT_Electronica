@@ -40,8 +40,8 @@ class FormClient extends React.Component {
             console.log("Le pido este id ", this.props.id)
             this.getClient(this.props.id)
             .then((res) => {
-                console.log("trae esta info el getById ", res)
-                this.setFieldsClient(res)
+                console.log("trae esta info el getById ", res.data)
+                this.setFieldsClient(res.data[0])
                 this.setState({ isLoading: false })
                 })
         }
@@ -84,7 +84,8 @@ class FormClient extends React.Component {
         if (id === null) {
             this.insertClient()
                 .then((res) => {
-                    this.props.onClientInsert(res.id)
+                    console.log("la insertada de cliente devuelve esto," ,res)
+                    this.props.onClientInsert(res.data.insertId)
                 })
         } else {
             if (this.state.update) {

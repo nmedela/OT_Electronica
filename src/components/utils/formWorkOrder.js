@@ -46,12 +46,13 @@ class FormWorkOrder extends React.Component {
                 code: null,
                 client_id: null,
                 admission_date: moment(),
-                equipment: 0,
+                equipment_id: 0,
                 brand: null,
                 model: null,
                 serial_number: null,
                 failure: null,
                 last_status: 0,
+                last_observation: null,
                 deliver_date: null, //Acordarse de que si la orden está en reclamo, debe seguirle estado reclamo devuelto, reclamo entregado
                 warranty: null,
                 final_amount: null,
@@ -86,8 +87,8 @@ class FormWorkOrder extends React.Component {
             this.setState({ isLoading: true, inProgress: true })
             this.getWorkOrder(this.props.id)
                 .then((res) => {
-                    console.log("esto trae la wo, ", res)
-                    this.setFields(res)
+                    console.log("esto trae la wo, ", res.data[0])
+                    this.setFields(res.data[0])
                     console.log("inició", this.state)
                     this.setState({ new: false, isLoading: false, inProgress: false })
                 })
@@ -98,13 +99,13 @@ class FormWorkOrder extends React.Component {
             // })
         }
     }
-  
+
     getWorkOrder = (id) => {
         return workOrderRepository.getById(id)
     }
     setFields = (wo) => {
-        console.log('Esto tiene el admission date ', moment(wo.admission_date))
-        // wo.admission_date = moment(wo.admission_date)
+        console.log('Esto tiene el admission date ', moment(wo.admission_date, 'DD/MM/YYYY'))
+        // wo.admission_date = moment(wo.admission_date,'DD/MM/YYYY')
         this.setState({
             wo
             // id: wo.id,
@@ -140,9 +141,9 @@ class FormWorkOrder extends React.Component {
 
     handleEquipmentChange = (event) => {
         let wo = this.state.wo
-        wo.equipment = event.target.value
+        wo.equipment_id = event.target.value
         this.setState({ wo })
-        console.log('cambio a ', this.state.wo.equipment)
+        console.log('cambio a ', this.state.wo.equipment_id)
     };
     handleStatusChange = (event) => {
         let wo = this.state.wo
@@ -191,6 +192,7 @@ class FormWorkOrder extends React.Component {
         //Aca debería hacer algo como llamar a la clase History y crearle los parametros
         let wo = this.state.wo
         wo.client_id = client_id
+        wo.last_observation = this.state.observation
         let history = {
             id_wo: wo.id,
             date_status: this.state.status_date,
@@ -199,7 +201,7 @@ class FormWorkOrder extends React.Component {
         }
 
         if (this.state.new) {
-            workOrderRepository.create(wo, history)
+            workOrderRepository.create(wo, this.state.status_date)
                 .then((res) => {
                     this.checkComplete(res)
                 })
@@ -215,7 +217,8 @@ class FormWorkOrder extends React.Component {
 
     checkComplete = (res) => {
         if (res) {
-            let wo = res
+            let wo = this.state.wo
+            wo.id = res.data.insertId
             this.setState({
                 wo,
                 inProgress: false,
@@ -340,7 +343,7 @@ class FormWorkOrder extends React.Component {
                                         label="Fecha de ingreso"
                                         disabled={!this.props.new && !this.state.update}
                                         format="DD/MM/yyyy"
-                                        value={wo.admission_date}
+                                        value={moment(wo.admission_date, 'DD/MM/YYYY')}
                                         onChange={this.handleAdmissionDateChange}
                                         KeyboardButtonProps={{
                                             'aria-label': 'change date',
@@ -354,7 +357,7 @@ class FormWorkOrder extends React.Component {
                                     style={styleTextField}
                                     labelId="lblEquipment"
                                     disabled={!this.props.new && !this.state.update}
-                                    value={wo.equipment}
+                                    value={wo.equipment_id}
                                     onChange={this.handleEquipmentChange}
                                     label="Equipo"
                                 // variant='outlined'

@@ -1,3 +1,5 @@
+import config from './../config'
+import axios from 'axios';
 const { Client } = require('./../domain/Client')
 
 var idMainClient = 0
@@ -19,21 +21,22 @@ class ClientRepository {
     }
 
     async create(client) {
-        client.id = idMainClient
-        const newClient = Client.fromObject(client) //TODO frrom objet o from json para que convierta el coso que llega
-        // newClient.id = idMainClient
-        // newClient.name = client.name
-        // newClient.tel = client.tel
-        // newClient.tel2 = client.tel2
-        // newClient.mail = client.mail
-        // newClient.mail2 = client.mail2
-        // newClient.direction = client.direction
-        // newClient.location = client.location
+        return axios.post(`${config.url}:${config.port}/client/`,{client:client})
+        // client.id = idMainClient
+        // const newClient = Client.fromObject(client) //TODO frrom objet o from json para que convierta el coso que llega
+        // // newClient.id = idMainClient
+        // // newClient.name = client.name
+        // // newClient.tel = client.tel
+        // // newClient.tel2 = client.tel2
+        // // newClient.mail = client.mail
+        // // newClient.mail2 = client.mail2
+        // // newClient.direction = client.direction
+        // // newClient.location = client.location
 
-        this.clients.push(newClient)
-        ++idMainClient
-        console.log(this.clients)
-        return newClient
+        // this.clients.push(newClient)
+        // ++idMainClient
+        // console.log(this.clients)
+        // return newClient
     }
     async update(client) {
         const newClient = Client.fromObject(client)
@@ -45,15 +48,19 @@ class ClientRepository {
 
     async getById(_id) {
         console.log("Esto tiene el cliente id ", _id)
-        return this.clients.find(client => client.id === _id)
+        return axios.get(`${config.url}:${config.port}/client/${_id}`)
+        // return this.clients.find(client => client.id === _id)
     }
     async getNameById(_id) {
         console.log("Esto tiene el cliente id ", _id)
-        let client = this.clients.find(client => client.id === _id)
-        return client.name
+        // let client = this.clients.find(client => client.id === _id)
+        return axios.get(`${config.url}:${config.port}/client/${_id}`)
+    
+        // return client.name
     }
     async getAll() {
-        return this.clients
+        return axios.get(`${config.url}:${config.port}/client/all`)
+        // return this.clients
     }
 }
 
