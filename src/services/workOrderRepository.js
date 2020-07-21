@@ -28,7 +28,7 @@ class WorkOrderRepository {
     }
 
     async create(wo, date_change) {
-        return axios.post(`${config.url}:${config.port}/wo/`,{wo,date_change})
+        return axios.post(`${config.url}:${config.port}/wo/new`,{wo,date_change})
         // wo.id = idMainWorkOrder
         // if (wo.last_status === 3) {
         //     console.log("Esto tiene last status ", history.date_status)
@@ -59,19 +59,19 @@ class WorkOrderRepository {
         // ++idMainWorkOrder
         // return newWorkOrder
     }
-    async update(newWorkOrder, history) {
-        if (newWorkOrder.last_status === 3) {
-            console.log("Esto tiene last status ", history.date_status)
-            newWorkOrder.deliver_date = history.date_status
-            console.log("Esto tiene last el newWorkOrder ", newWorkOrder)
-        }
-        const wo = WorkOrder.fromObject(newWorkOrder)
-        this.workOrders = this.workOrders.filter(workOrder => workOrder.id !== wo.id)
-        this.workOrders.push(wo)
-
-        historyRepository.create(history)
-        console.log(this.workOrders)
-        return newWorkOrder
+    async update(wo, date_change) {
+        // if (newWorkOrder.last_status === 3) {
+        //     console.log("Esto tiene last status ", history.date_status)
+        //     newWorkOrder.deliver_date = history.date_status
+        //     console.log("Esto tiene last el newWorkOrder ", newWorkOrder)
+        // }
+        // const wo = WorkOrder.fromObject(newWorkOrder)
+        // this.workOrders = this.workOrders.filter(workOrder => workOrder.id !== wo.id)
+        // this.workOrders.push(wo)
+        return axios.put(`${config.url}:${config.port}/wo/change`,{wo,date_change})
+        // historyRepository.create(history)
+        // console.log(this.workOrders)
+        // return newWorkOrder
     }
 
     async getById(_id) {

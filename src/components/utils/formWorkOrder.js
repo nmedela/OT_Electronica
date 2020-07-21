@@ -199,14 +199,15 @@ class FormWorkOrder extends React.Component {
             id_status: wo.last_status,
             observation: this.state.observation
         }
-
+        console.log("ingreso cliente ahora va por wo")
         if (this.state.new) {
             workOrderRepository.create(wo, this.state.status_date)
-                .then((res) => {
+            .then((res) => {
+                console.log("respondió esto ", res)
                     this.checkComplete(res)
                 })
         } else {
-            workOrderRepository.update(wo, history)
+            workOrderRepository.update(wo,  this.state.status_date)
                 .then((res) => {
                     this.checkComplete(res)
                 })
@@ -216,19 +217,23 @@ class FormWorkOrder extends React.Component {
     }
 
     checkComplete = (res) => {
-        if (res) {
-            let wo = this.state.wo
+        let wo = this.state.wo
+        let message =null
+        if (this.state.new) {
             wo.id = res.data.insertId
-            this.setState({
-                wo,
-                inProgress: false,
-                snackBarOpen: true,
-                messageResult: "Se ingresó correctamente",
-                openConfirm: true,
-            })
-
+            message = "Se ingresó correctamente"
+        } else {
+            console.log(res)
+            message = "Se modificó correctamente"
         }
 
+        this.setState({
+            wo,
+            inProgress: false,
+            snackBarOpen: true,
+            messageResult: message,
+            openConfirm: true,
+        })
     }
 
 
