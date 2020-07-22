@@ -12,6 +12,7 @@ import FormWorkOrder from './formWorkOrder'
 import { status } from './../../domain/status'
 import { equipments } from './../../domain/equipments'
 import clientRepository from './../../services/clientRepository'
+import workOrderRepository from './../../services/workOrderRepository'
 
 
 import { Link } from 'react-router-dom'
@@ -54,6 +55,10 @@ class MyItem extends React.Component {
     getWorkOrderByFilter = () => {
         //TODO HACER BUSQUEDA POR FILTRO PARA LLENAR LA LISTA
     }
+    deleteWO = () => {
+        workOrderRepository.delete(this.props.onWO.id)
+        this.refresh()
+    }
     refresh = () => {
         this.props.refresh()
     }
@@ -82,7 +87,7 @@ class MyItem extends React.Component {
                                 <i class="material-icons">get_app</i>
                             </Link>
                         </IconButton>
-                        <IconButton edge="end" aria-label="delete">
+                        <IconButton edge="end" aria-label="delete" onClick={this.deleteWO}>
                             <i class="material-icons" style={{ color: 'red' }}>delete</i>
                         </IconButton>
                     </ListItemSecondaryAction>

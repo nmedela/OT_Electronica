@@ -202,12 +202,12 @@ class FormWorkOrder extends React.Component {
         console.log("ingreso cliente ahora va por wo")
         if (this.state.new) {
             workOrderRepository.create(wo, this.state.status_date)
-            .then((res) => {
-                console.log("respondió esto ", res)
+                .then((res) => {
+                    console.log("respondió esto ", res)
                     this.checkComplete(res)
                 })
         } else {
-            workOrderRepository.update(wo,  this.state.status_date)
+            workOrderRepository.update(wo, this.state.status_date)
                 .then((res) => {
                     this.checkComplete(res)
                 })
@@ -218,7 +218,7 @@ class FormWorkOrder extends React.Component {
 
     checkComplete = (res) => {
         let wo = this.state.wo
-        let message =null
+        let message = null
         if (this.state.new) {
             wo.id = res.data.insertId
             message = "Se ingresó correctamente"
@@ -321,11 +321,11 @@ class FormWorkOrder extends React.Component {
                             <DialogActions>
                                 <Button onClick={this.handleCloseToConfirm} color="primary">
                                     No          </Button>
-                                <Button color="primary" autoFocus>
-                                    <Link to={`/lector/${this.state.wo.id}`} style={{ color: 'inherit' }} >
+                                <Link to={`/lector/${this.state.wo.id}`} style={{ color: 'inherit', textDecoration:'none' }} >
+                                    <Button color="primary" autoFocus>
                                         Si
-                            </Link>
                                 </Button>
+                                </Link>
                             </DialogActions>
                         </Dialog>
 

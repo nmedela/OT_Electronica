@@ -105,7 +105,7 @@ class WorkOrders extends React.Component {
             <div>
                 <Paper style={stylePaper}>
                     <Grid container justify='center' style={styleRoot} spacing={2} >
-                        <Grid item xs={12} sm={4}>
+                        {/* <Grid item xs={12} sm={4}>
                             <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale("es")}>
                                 <KeyboardDatePicker
                                     margin="normal"
@@ -148,7 +148,7 @@ class WorkOrders extends React.Component {
                                 onChange={this.handleSearchChange}
                                 value={this.state.filter_search}
                                 variant="outlined" />
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs={12}>
                             <ListWorkOrder refresh={this.refresh} workOrders={this.state.workOrders} />
                         </Grid>

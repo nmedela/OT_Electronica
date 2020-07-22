@@ -28,7 +28,7 @@ class WorkOrderRepository {
     }
 
     async create(wo, date_change) {
-        return axios.post(`${config.url}:${config.port}/wo/new`,{wo,date_change})
+        return axios.post(`${config.url}:${config.port}/wo/new`, { wo, date_change })
         // wo.id = idMainWorkOrder
         // if (wo.last_status === 3) {
         //     console.log("Esto tiene last status ", history.date_status)
@@ -68,17 +68,21 @@ class WorkOrderRepository {
         // const wo = WorkOrder.fromObject(newWorkOrder)
         // this.workOrders = this.workOrders.filter(workOrder => workOrder.id !== wo.id)
         // this.workOrders.push(wo)
-        return axios.put(`${config.url}:${config.port}/wo/change`,{wo,date_change})
+        return axios.put(`${config.url}:${config.port}/wo/change`, { wo, date_change })
         // historyRepository.create(history)
         // console.log(this.workOrders)
         // return newWorkOrder
     }
 
     async getById(_id) {
-       return axios.get(`${config.url}:${config.port}/wo/${_id}`)
+        return axios.get(`${config.url}:${config.port}/wo/${_id}`)
     }
     async getAll() {
         return axios.get(`${config.url}:${config.port}/wo/all`)
+    }
+    async delete(_id) {
+        return axios.delete(`${config.url}:${config.port}/wo/delete/${_id}`)
+
     }
 }
 

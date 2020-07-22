@@ -26,7 +26,7 @@ class Settings extends React.Component {
             <Grid container justify='center' style={styleRoot} spacing={2} >
 
                 <Grid item xs={12}>
-                    <div>Settings</div>
+                    <div>En construcción :(</div>
                 </Grid>              
             </Grid>
         )

@@ -90,8 +90,8 @@ class FormClient extends React.Component {
         } else {
             if (this.state.update) {
                 this.updatetClient()
-                    .then((res) => {
-                        this.props.onClientInsert(res.id)
+                    .then((res) => { //chequear que salio todo bien con la respuesta
+                        this.props.onClientInsert(id)
                     })
             } else {
                 this.props.onClientInsert(id)

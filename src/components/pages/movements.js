@@ -40,7 +40,8 @@ class Movements extends React.Component {
             <div>
 
                 <Grid container justify='center' style={styleRoot} spacing={2} >
-
+                    En construcción :(
+{/* 
                     <Grid item xs={12}>
                         <TextBox 
                         value={this.state.nombre} 
@@ -48,27 +49,7 @@ class Movements extends React.Component {
                         name={'nombre'} 
                         handleBlur={this.handleChangeValue} 
                         />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextBox value={this.state.apellido} label={'Apellido'} name={'apellido'} handleBlur={this.handleChangeValue} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextBox value={this.state.edad} label={'Edad'} name={'edad'} handleBlur={this.handleChangeValue} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextBox value={this.state.direction} label={'Direccion'} name={'direction'} handleBlur={this.handleChangeValue} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextBox value={this.state.si} label={'Si'} name={'si'} handleBlur={this.handleChangeValue} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextBox value={this.state.otro} label={'Otro'} name={'otro'} handleBlur={this.handleChangeValue} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button variant="contained"
-                            color="primary"
-                            size="large" onClick={this.submit} />
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </div>
         )
