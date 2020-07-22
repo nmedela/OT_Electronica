@@ -9,6 +9,8 @@ import Switch from '@material-ui/core/Switch';
 import InputLabel from '@material-ui/core/InputLabel';
 // const clientRepository = require('./../../services/clientRepository').ClientRepository
 import clientRepository from './../../services/clientRepository'
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 class FormClient extends React.Component {
 
     constructor(props) {
@@ -123,15 +125,13 @@ class FormClient extends React.Component {
 
         if (this.state.isLoading) {
             return (
-                <div>
-                    Está cargando
+                <div style={styleRoot}>
+                    <LinearProgress />
                 </div>
             )
         }
         return (
             <div>
-            {/* // <form style={stylePaper} noValidate autoComplete="off"> */}
-                {/* <Paper style={stylePaper}> */}
                     <Grid container justify='center' style={styleRoot} spacing={1} >
                         <Grid item xs={12} sm={4}>
                             <AccordionSummary
@@ -247,8 +247,6 @@ class FormClient extends React.Component {
                             />
                         </Grid>
                     </Grid>
-                {/* </Paper> */}
-            {/* </form> */}
             </div>
         )
     }

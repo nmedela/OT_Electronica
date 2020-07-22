@@ -15,6 +15,7 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import workOrderRepository from './../../services/workOrderRepository'
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const statusList = [{ id: -1, title: "Todos" }, ...status]
 const styleTextField = {
@@ -97,7 +98,7 @@ class WorkOrders extends React.Component {
         if (this.state.isLoading) {
             return (
                 <div>
-                    cargando
+                  <LinearProgress/>
                 </div>
             )
         }

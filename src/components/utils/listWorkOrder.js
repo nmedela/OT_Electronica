@@ -45,44 +45,30 @@ class ListWorkOrders extends React.Component {
             flexGrow: 1,
             marginLeft: '1px'
         }
-
-        if (!this.state.isLoading && this.state.workOrders.length==0) {
-            return (<div>
-
-                <Grid container justify='center' style={styleRoot} spacing={2} >
-                    <Grid item xs={12} sm={12}>
-
-                        <List dense>
-                            <ListItem button onClick={this.handleClick} style={{ marginTop: '20px' }}>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <i class="material-icons" > search </i>
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary={`No se enuentran ordenes de trabajo`}
-                                />
-                            </ListItem>
-                        </List>
-                    </Grid>
-                </Grid>
-            </div>
-            )
-        }
         return (
             <div>
                 <Grid container justify='center' style={styleRoot} spacing={2} >
-
                     <Grid item xs={12} sm={12}>
 
                         <List dense>
                             {/* {this.generate( */}
+                            {(this.state.isLoading || this.state.workOrders.length == 0) &&
+                                <ListItem button onClick={this.handleClick} style={{ marginTop: '20px' }}>
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <i class="material-icons" > search </i>
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary={`No se enuentran ordenes de trabajo`}
+                                    />
+                                </ListItem>
+                            }
                             {!this.state.isLoading && this.state.workOrders.map((wo) => {
                                 return <MyItem id={wo.id} onWO={wo} status={wo.last_status} refresh={this.refresh} />
                             }
                             )
                             }
-                            {/* )} */}
                         </List>
                     </Grid>
                 </Grid>

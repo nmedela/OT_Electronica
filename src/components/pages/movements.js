@@ -2,6 +2,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import TextBox from './../utils/textBox'
 import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const styleRoot = {
     width: '100%',
@@ -37,10 +38,11 @@ class Movements extends React.Component {
     render() {
 
         return (
-            <div>
+            <div style = {{width:'100%'}}>
 
-                <Grid container justify='center' style={styleRoot} spacing={2} >
+                {/* <Grid container justify='center' style={styleRoot} spacing={2} > */}
                     En construcción :(
+                        <LinearProgress/>
 {/* 
                     <Grid item xs={12}>
                         <TextBox 
@@ -50,7 +52,7 @@ class Movements extends React.Component {
                         handleBlur={this.handleChangeValue} 
                         />
                     </Grid> */}
-                </Grid>
+                {/* </Grid> */}
             </div>
         )
     }

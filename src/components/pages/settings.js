@@ -1,5 +1,6 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 
 const styleRoot = {
@@ -26,7 +27,10 @@ class Settings extends React.Component {
             <Grid container justify='center' style={styleRoot} spacing={2} >
 
                 <Grid item xs={12}>
-                    <div>En construcción :(</div>
+                    <div>
+                        En construcción :(
+                            <LinearProgress/>
+                            </div>
                 </Grid>              
             </Grid>
         )
