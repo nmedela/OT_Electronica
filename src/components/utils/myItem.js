@@ -13,6 +13,7 @@ import { status } from './../../domain/status'
 import { equipments } from './../../domain/equipments'
 import clientRepository from './../../services/clientRepository'
 import workOrderRepository from './../../services/workOrderRepository'
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 
 import { Link } from 'react-router-dom'
@@ -37,9 +38,19 @@ class MyItem extends React.Component {
                 this.setState({
                     client_name,
                     isLoading: false,
-                    id: this.props.id
+                    id: this.props.id,
+                    deleteDisabled: false
                 })
             })
+    }
+    componentWillReceiveProps(props) {
+        if (props.onWo) {
+            this.setState({
+                workOrders: props.onWO,
+                isLoading: false,
+                id: props.id
+            })
+        }
     }
     handleChange = (event) => {
         console.log('cambio')
@@ -56,8 +67,11 @@ class MyItem extends React.Component {
         //TODO HACER BUSQUEDA POR FILTRO PARA LLENAR LA LISTA
     }
     deleteWO = () => {
-        workOrderRepository.delete(this.props.onWO.id)
-        this.refresh()
+        this.setState({ isLoading:true,deleteDisabled: true })
+        workOrderRepository.delete(this.props.onWO.id).then((res) => {
+            if (res)
+                this.refresh()
+        })
     }
     refresh = () => {
         this.props.refresh()
@@ -65,7 +79,10 @@ class MyItem extends React.Component {
     render() {
         let equipment = equipments.find(s => s.id === this.props.onWO.equipment_id).title
         if (this.state.isLoading) {
-            return <div>Está cargando</div>
+            return <div>
+                Esperando solicitud
+                <LinearProgress/>
+            </div>
         }
 
         return (
@@ -87,8 +104,8 @@ class MyItem extends React.Component {
                                 <i class="material-icons">get_app</i>
                             </Link>
                         </IconButton>
-                        <IconButton edge="end" aria-label="delete" onClick={this.deleteWO}>
-                            <i class="material-icons" style={{ color: 'red' }}>delete</i>
+                        <IconButton edge="end" aria-label="delete" onClick={this.deleteWO} disabled={this.state.deleteDisabled}>
+                            <i class="material-icons" style={{ color: this.state.deleteDisabled ? 'gray' : 'red'  }}>delete</i>
                         </IconButton>
                     </ListItemSecondaryAction>
                 </ListItem>

@@ -25,6 +25,14 @@ class ListWorkOrders extends React.Component {
             isLoading: false
         })
     }
+    componentWillReceiveProps(props) {
+        if (props.workOrders) {
+            this.setState({
+                workOrders: props.workOrders,
+                isLoading: false
+            })
+        }
+    }
     handleChange = (event) => {
         console.log('cambio')
     };
@@ -37,6 +45,9 @@ class ListWorkOrders extends React.Component {
     }
 
     refresh = () => {
+        this.setState({
+            isLoading:true
+        })
         this.props.refresh()
     }
     render() {

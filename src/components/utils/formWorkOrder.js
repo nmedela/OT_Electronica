@@ -92,11 +92,6 @@ class FormWorkOrder extends React.Component {
                     console.log("inició", this.state)
                     this.setState({ new: false, isLoading: false, inProgress: false })
                 })
-            // .then((res) => {
-            //     return this.setFields(res)
-            // }).then((res) => {
-            //     this.setState({ isLoading: false })
-            // })
         }
     }
 
@@ -105,23 +100,10 @@ class FormWorkOrder extends React.Component {
     }
     setFields = (wo) => {
         console.log('Esto tiene el admission date ', moment(wo.admission_date, 'DD/MM/YYYY'))
-        // wo.admission_date = moment(wo.admission_date,'DD/MM/YYYY')
         this.setState({
             wo
-            // id: wo.id,
-            // code: wo.code,
-            // client_id: wo.client_id,
-            // admission_date: wo.admission_date,
-            // status_value: wo.status,
-            // equipment: wo.equipment,
-            // brand: wo.brand,
-            // model: wo.model,
-            // serial_number: wo.serial_number,
-            // failure: wo.failure,
-            // warranty: wo.warranty,
-            // final_amount: wo.final_amount,
+       
         })
-        // this.handleChange = this.handleChange.bind(this);
         return null
     }
     handleAdmissionDateChange = (date) => {
@@ -184,10 +166,7 @@ class FormWorkOrder extends React.Component {
         })
     }
     insertWorkOrder = (client_id) => {
-        this.setState({
-            // isLoading: true,
-            generate: false,
-        })
+      
         console.log("Se generó este id de cliente ", client_id)
         //Aca debería hacer algo como llamar a la clase History y crearle los parametros
         let wo = this.state.wo
@@ -217,6 +196,10 @@ class FormWorkOrder extends React.Component {
     }
 
     checkComplete = (res) => {
+        this.setState({
+            // isLoading: true,
+            generate: false,
+        })
         let wo = this.state.wo
         let message = null
         if (this.state.new) {
@@ -524,6 +507,7 @@ class FormWorkOrder extends React.Component {
                                         variant="contained"
                                         color="primary"
                                         size="large"
+                                        disabled={this.state.generate}
                                         onClick={this.handleSubmit}
                                         startIcon={<SaveIcon />}
                                     >

@@ -1,5 +1,5 @@
 const config = {
-    url: 'http://192.168.0.38', //http://otelectronicabuenosaires.duckdns.org
+    url: 'http://otelectronicabuenosaires.duckdns.org', //http://otelectronicabuenosaires.duckdns.org
     port: 3305,
 }
 
