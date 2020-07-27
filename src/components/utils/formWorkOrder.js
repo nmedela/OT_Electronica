@@ -101,7 +101,9 @@ class FormWorkOrder extends React.Component {
     setFields = (wo) => {
         console.log('Esto tiene el admission date ', moment(wo.admission_date, 'DD/MM/YYYY'))
         this.setState({
-            wo
+            wo,
+            observation:wo.last_observation,
+            status_date: wo.deliver_date? wo.deliver_date: moment()
        
         })
         return null
@@ -427,7 +429,7 @@ class FormWorkOrder extends React.Component {
                                         label={"Fecha"}
                                         onChange={this.handleStatusDateChange}
                                         format="DD/MM/yyyy"
-                                        value={this.state.status_date}
+                                        value={moment(this.state.status_date, 'DD/MM/YYYY')}
                                         KeyboardButtonProps={{
                                             'aria-label': 'change date',
                                         }}
