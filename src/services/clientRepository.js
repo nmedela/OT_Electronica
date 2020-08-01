@@ -21,7 +21,7 @@ class ClientRepository {
     }
 
     async create(client) {
-        return axios.post(`${config.url}:${config.port}/client/new`,{client:client})
+        return axios.post(`${config.url}:${config.port}/client/new`, { client: client })
         // client.id = idMainClient
         // const newClient = Client.fromObject(client) //TODO frrom objet o from json para que convierta el coso que llega
         // // newClient.id = idMainClient
@@ -39,7 +39,7 @@ class ClientRepository {
         // return newClient
     }
     async update(client) {
-        return axios.put(`${config.url}:${config.port}/client/update`,{client:client})
+        return axios.put(`${config.url}:${config.port}/client/update`, { client: client })
         // const newClient = Client.fromObject(client)
         // this.clients = this.clients.filter(client => client.id !== newClient.id)
         // this.clients.push(newClient)
@@ -56,12 +56,16 @@ class ClientRepository {
         console.log("Esto tiene el cliente id ", _id)
         // let client = this.clients.find(client => client.id === _id)
         return axios.get(`${config.url}:${config.port}/client/${_id}`)
-    
+
         // return client.name
     }
     async getAll() {
         return axios.get(`${config.url}:${config.port}/client/all`)
         // return this.clients
+    }
+    async delete(_id) {
+        return axios.delete(`${config.url}:${config.port}/client/delete/${_id}`)
+
     }
 }
 

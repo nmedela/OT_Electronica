@@ -8,6 +8,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
 import ListWorkOrder from './../utils/listWorkOrder'
 import Avatar from '@material-ui/core/Avatar';
 import clientRepository from './../../services/clientRepository'
@@ -33,9 +34,10 @@ class Clients extends React.Component {
         super(props)
         this.state = {
             clients: [],
+            selectedClient:null,
             openDialog: false,
             messageDialog: '',
-            actionDialog:()=>{return null},
+            actionDialog: () => { return null },
             isLoading: true,
         }
         this.handleClose = this.handleConfirmDialog.bind(this)
@@ -52,22 +54,52 @@ class Clients extends React.Component {
     getClients = () => {
         return clientRepository.getAll()
     }
+    setClients = (clients)=>{
+        this.setState({
+            clients,
+            isLoading: false
+        })
+    }
     handleChange = (event) => {
         console.log('cambio')
     };
-    handleClick = (event) => {
+    handleClick = ()=>{
+        return null
+    }
+    handleDelete = (client) => {
         console.log('apreté')
         this.setState({
+            selectedClient:client,
             openDialog: true,
-            messageDialog:'Desa eliminar el churuchuchu?',
-            actionDialog:this.handleConfirmDialog
+            messageDialog: '¿Desea eliminar el cliente?',
+            actionDialog: this.handleConfirmDialog
         })
     };
+
     handleConfirmDialog = (value) => {
         console.log("entra handlcleose y devolvió ", value)
         this.setState({
-            openDialog: false
+            isLoading:true,
+            openDialog: false,
         })
+        if(value){
+            clientRepository.delete(this.state.selectedClient)
+            .then((res)=>{
+                this.getClients()
+                .then((res)=>{
+                    let clients = res.data
+                    this.setClients(clients)
+                    this.setState({
+                        selectedClient:null,
+                    })
+                })
+            })
+        }else{
+            this.setState({
+                isLoading:false,
+                selectedClient:null,
+            })
+        }
     }
     render() {
 
@@ -125,6 +157,16 @@ class Clients extends React.Component {
                                         <ListItemText
                                             primary={`Sr/a: ${client.name} - tel: ${client.tel} - dirección: ${client.direction}`}
                                         />
+                                        <ListItemSecondaryAction>
+                                            {/* <IconButton edge="end" aria-label="delete">
+                                                <Link to={`/lector/${this.props.onWO.id}`} style={{ color: 'gray' }} >
+                                                    <i class="material-icons">get_app</i>
+                                                </Link>
+                                            </IconButton> */}
+                                            <IconButton edge="end" aria-label="delete" onClick={()=>{this.handleDelete(client.id)}} disabled={this.state.deleteDisabled}>
+                                                <i class="material-icons" style={{ color: this.state.deleteDisabled ? 'gray' : 'red' }}>delete</i>
+                                            </IconButton>
+                                        </ListItemSecondaryAction>
                                     </ListItem>)
                                 }
                                 )
