@@ -15,6 +15,7 @@ import clientRepository from './../../services/clientRepository'
 import workOrderRepository from './../../services/workOrderRepository'
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Confirm from './../utils/confirm'
+import WoViewer from './../utils/woViewer'
 
 import { Link } from 'react-router-dom'
 class MyItem extends React.Component {
@@ -28,7 +29,9 @@ class MyItem extends React.Component {
             messageDialog: '',
             actionDialog: () => { return null },
             open: false,
-            isLoading: true
+            isLoading: true,
+            openWoViewer:false,
+
         }
         this.refresh = this.refresh.bind(this)
     }
@@ -58,6 +61,17 @@ class MyItem extends React.Component {
     handleChange = (event) => {
         console.log('cambio')
     };
+    handleClickWoViewer = ()=>{
+        this.setState({
+            openWoViewer:true,
+        })
+        return null
+    }
+    handleCloseWoViewer=()=>{
+        this.setState({
+            openWoViewer:false,
+        })
+    }
     handleClick = () => {
         this.setState({
             open: !this.state.open
@@ -109,8 +123,9 @@ class MyItem extends React.Component {
 
         return (
             <div>
+                <WoViewer open={this.state.openWoViewer} id={this.state.id} handleClose={this.handleCloseWoViewer} refresh={this.refresh} />
                 <Confirm open={this.state.openDialog} message={this.state.messageDialog} handleClose={this.state.actionDialog} />
-                <ListItem button onClick={this.handleClick} style={{ marginTop: '20px' }}>
+                <ListItem button onClick={this.handleClickWoViewer} style={{ marginTop: '20px' }}>
                     <ListItemAvatar>
                         <Avatar>
                             <i class="material-icons" style={{ color: status.find(s => s.id === this.props.onWO.last_status).color }}>{status.find(s => s.id === this.props.onWO.last_status).icon}</i>
@@ -132,9 +147,9 @@ class MyItem extends React.Component {
                         </IconButton>
                     </ListItemSecondaryAction>
                 </ListItem>
-                <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+                {/* <Collapse in={this.state.open} timeout="auto" unmountOnExit>
                     <FormWorkOrder refresh={this.refresh} id={this.props.id} />
-                </Collapse>
+                </Collapse> */}
             </div>
 
         )

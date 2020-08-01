@@ -70,6 +70,7 @@ class FormWorkOrder extends React.Component {
             snackBarOpen: false,
             messageResult: null,
             openConfirm: false,
+            buttonText:'Generar'
 
         }
         // this.handleChange = this.handleChange.bind(this)
@@ -84,7 +85,7 @@ class FormWorkOrder extends React.Component {
     componentWillMount() {
         console.log("Esto tienen los states ", this.state)
         if (!this.props.new) {
-            this.setState({ isLoading: true, inProgress: true })
+            this.setState({ isLoading: true, inProgress: true, buttonText:'Modificar' })
             this.getWorkOrder(this.props.id)
                 .then((res) => {
                     console.log("esto trae la wo, ", res.data[0])
@@ -103,7 +104,7 @@ class FormWorkOrder extends React.Component {
         this.setState({
             wo,
             observation:wo.last_observation,
-            status_date: wo.deliver_date? wo.deliver_date: moment()
+            status_date: wo.deliver_date? moment(wo.deliver_date,'DD/MM/YYYY'): moment()
        
         })
         return null
@@ -513,7 +514,7 @@ class FormWorkOrder extends React.Component {
                                         onClick={this.handleSubmit}
                                         startIcon={<SaveIcon />}
                                     >
-                                        Generar
+                                        {this.state.buttonText}
                             </Button>
                                 </Grid>
                             </Grid>

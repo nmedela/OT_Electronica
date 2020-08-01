@@ -13,6 +13,9 @@ import ListWorkOrder from './../utils/listWorkOrder'
 import Avatar from '@material-ui/core/Avatar';
 import clientRepository from './../../services/clientRepository'
 import Confirm from './../utils/confirm'
+import WoViewer from './../utils/woViewer'
+import FormWorkOrder from './../utils/formWorkOrder'
+
 const styleRoot = {
     width: '100%',
     flexGrow: 1,
@@ -39,6 +42,7 @@ class Clients extends React.Component {
             messageDialog: '',
             actionDialog: () => { return null },
             isLoading: true,
+            openWoViewer:false,
         }
         this.handleClose = this.handleConfirmDialog.bind(this)
     }
@@ -64,7 +68,15 @@ class Clients extends React.Component {
         console.log('cambio')
     };
     handleClick = ()=>{
+        this.setState({
+            openWoViewer:true
+        })
         return null
+    }
+    handleCloseWoViewer=()=>{
+        this.setState({
+            openWoViewer:false
+        })
     }
     handleDelete = (client) => {
         console.log('apreté')
@@ -131,6 +143,7 @@ class Clients extends React.Component {
 
         return (
             <div>
+                <WoViewer open={this.state.openWoViewer} handleClose={this.handleCloseWoViewer}/>
                 <Confirm open={this.state.openDialog} handleClose={this.state.actionDialog} message={this.state.messageDialog} />
                 <Paper style={stylePaper}>
                     <Grid container justify='center' style={styleRoot} spacing={2} >
