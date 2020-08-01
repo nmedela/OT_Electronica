@@ -14,7 +14,7 @@ import { equipments } from './../../domain/equipments'
 import clientRepository from './../../services/clientRepository'
 import workOrderRepository from './../../services/workOrderRepository'
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import Confirm from './../utils/confirm'
 
 import { Link } from 'react-router-dom'
 class MyItem extends React.Component {
@@ -24,6 +24,9 @@ class MyItem extends React.Component {
         this.state = {
             id: null,
             client_name: null,
+            openDialog: false,
+            messageDialog: '',
+            actionDialog: () => { return null },
             open: false,
             isLoading: true
         }
@@ -66,11 +69,30 @@ class MyItem extends React.Component {
     getWorkOrderByFilter = () => {
         //TODO HACER BUSQUEDA POR FILTRO PARA LLENAR LA LISTA
     }
+
     deleteWO = () => {
-        this.setState({ isLoading:true,deleteDisabled: true })
-        workOrderRepository.delete(this.props.onWO.id).then((res) => {
-            if (res)
-                this.refresh()
+
+        this.setState({
+            openDialog: true,
+            messageDialog: 'Desea eliminar ésta orden de trabajo?',
+            actionDialog: (value) => {
+                if (value) {
+                    this.setState({
+                        isLoading:true,
+                        deleteDisabled: true
+                    })
+                    workOrderRepository.delete(this.props.onWO.id).then((res) => {
+                        if (res)
+                            this.refresh()
+                    })
+                }
+                this.setState({
+                    isLoading: false,
+                    deleteDisabled: false,
+                    openDialog: false,
+
+                })
+            }
         })
     }
     refresh = () => {
@@ -81,12 +103,13 @@ class MyItem extends React.Component {
         if (this.state.isLoading) {
             return <div>
                 Esperando solicitud
-                <LinearProgress/>
+                <LinearProgress />
             </div>
         }
 
         return (
             <div>
+                <Confirm open={this.state.openDialog} message={this.state.messageDialog} handleClose={this.state.actionDialog} />
                 <ListItem button onClick={this.handleClick} style={{ marginTop: '20px' }}>
                     <ListItemAvatar>
                         <Avatar>
@@ -105,7 +128,7 @@ class MyItem extends React.Component {
                             </Link>
                         </IconButton>
                         <IconButton edge="end" aria-label="delete" onClick={this.deleteWO} disabled={this.state.deleteDisabled}>
-                            <i class="material-icons" style={{ color: this.state.deleteDisabled ? 'gray' : 'red'  }}>delete</i>
+                            <i class="material-icons" style={{ color: this.state.deleteDisabled ? 'gray' : 'red' }}>delete</i>
                         </IconButton>
                     </ListItemSecondaryAction>
                 </ListItem>

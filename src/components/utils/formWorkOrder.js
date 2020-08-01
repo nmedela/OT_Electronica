@@ -49,7 +49,7 @@ class FormWorkOrder extends React.Component {
                 equipment_id: 0,
                 brand: null,
                 model: null,
-                serial_number: null,
+                approximate_amount: null,
                 failure: null,
                 last_status: 0,
                 last_observation: null,
@@ -382,11 +382,11 @@ class FormWorkOrder extends React.Component {
                             <Grid item xs={12} sm={4}>
                                 <TextBox
                                     style={styleTextField}
-                                    name="serial_number"
-                                    label="Nro Serie"
+                                    name="approximate_amount"
+                                    label="Monto aproximado"
                                     handleBlur={this.handleInputChange}
                                     disabled={!this.props.new && !this.state.update}
-                                    value={wo.serial_number}
+                                    value={wo.approximate_amount}
                                     variant="outlined" />
                             </Grid>
                             <Grid item xs={12} sm={8}>
@@ -401,7 +401,7 @@ class FormWorkOrder extends React.Component {
                                     // value={null}
                                     variant="outlined" />
                             </Grid>
-                            <Grid item xs={12} sm={3} style={{ display: this.props.new ? 'none' : 'inline-block' }}>
+                            {/* <Grid item xs={12} sm={3} style={{ display: this.props.new ? 'none' : 'inline-block' }}>
                                 <InputLabel shrink id="lblUpdate">Editar</InputLabel>
                                 <Switch
                                     checked={this.state.update}
@@ -410,7 +410,7 @@ class FormWorkOrder extends React.Component {
                                     name="update"
                                     color="primary"
                                 />
-                            </Grid>
+                            </Grid> */}
                             <Grid item xs={12} sm={9}>
                                 <TextBox
                                     style={styleTextField}

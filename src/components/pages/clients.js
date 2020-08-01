@@ -11,7 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import ListWorkOrder from './../utils/listWorkOrder'
 import Avatar from '@material-ui/core/Avatar';
 import clientRepository from './../../services/clientRepository'
-
+import Confirm from './../utils/confirm'
 const styleRoot = {
     width: '100%',
     flexGrow: 1,
@@ -33,8 +33,12 @@ class Clients extends React.Component {
         super(props)
         this.state = {
             clients: [],
-            isLoading: true
+            openDialog: false,
+            messageDialog: '',
+            actionDialog:()=>{return null},
+            isLoading: true,
         }
+        this.handleClose = this.handleConfirmDialog.bind(this)
     }
     componentWillMount() {
         this.getClients().then((res) => {
@@ -51,6 +55,20 @@ class Clients extends React.Component {
     handleChange = (event) => {
         console.log('cambio')
     };
+    handleClick = (event) => {
+        console.log('apreté')
+        this.setState({
+            openDialog: true,
+            messageDialog:'Desa eliminar el churuchuchu?',
+            actionDialog:this.handleConfirmDialog
+        })
+    };
+    handleConfirmDialog = (value) => {
+        console.log("entra handlcleose y devolvió ", value)
+        this.setState({
+            openDialog: false
+        })
+    }
     render() {
 
         // if (this.state.isLoading || this.state.clients.length == 0) {
@@ -81,6 +99,7 @@ class Clients extends React.Component {
 
         return (
             <div>
+                <Confirm open={this.state.openDialog} handleClose={this.state.actionDialog} message={this.state.messageDialog} />
                 <Paper style={stylePaper}>
                     <Grid container justify='center' style={styleRoot} spacing={2} >
                         <Grid item xs={12} sm={12}>
@@ -97,7 +116,7 @@ class Clients extends React.Component {
                                 </ListItem>
                                 }
                                 {!this.state.isLoading && this.state.clients.map((client) => {
-                                    return (<ListItem button style={{ marginTop: '20px' }}>
+                                    return (<ListItem button style={{ marginTop: '20px' }} onClick={this.handleClick}>
                                         <ListItemAvatar>
                                             <Avatar>
                                                 <i class="material-icons" > person </i>

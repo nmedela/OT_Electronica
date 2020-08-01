@@ -242,8 +242,8 @@ class PdfViewer extends React.Component {
                             </View>
                             <View style={styles.sectionCol}>
                                 <View style={styles.sectionRow}>
-                                    <Text style={styles.itemText}> Nro Serie: </Text>
-                                    {wo.serial_number !== null && <Text style={styles.valueText}> {wo.serial_number}</Text>}
+                                    <Text style={styles.itemText}> Monto aproximado: </Text>
+                                    {wo.approximate_amount !== null && <Text style={styles.valueText}> {wo.approximate_amount}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Falla: </Text>
