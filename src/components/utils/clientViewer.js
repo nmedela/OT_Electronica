@@ -33,7 +33,7 @@ export default function ClientViewer(props) {
             getWorkOrders()
         }
         if(!open){
-            console.log("salio")
+            // console.log("salio")
             setWOs(null)
         }
         // setMessage(props.message)

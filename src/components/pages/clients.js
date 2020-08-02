@@ -144,11 +144,9 @@ class Clients extends React.Component {
                                             primary={`Sr/a: ${client.name} - tel: ${client.tel} - dirección: ${client.direction}`}
                                         />
                                         <ListItemSecondaryAction>
-                                            {/* <IconButton edge="end" aria-label="delete">
-                                                <Link to={`/lector/${this.props.onWO.id}`} style={{ color: 'gray' }} >
-                                                    <i class="material-icons">get_app</i>
-                                                </Link>
-                                            </IconButton> */}
+                                            <IconButton edge="end" aria-label="delete" onClick={()=>{this.props.history.push('/client/'+client.id)}}>
+                                                    <i class="material-icons">edit</i>
+                                            </IconButton>
                                             <IconButton edge="end" aria-label="delete" onClick={()=>{this.handleDelete(client.id)}} disabled={this.state.deleteDisabled}>
                                                 <i class="material-icons" style={{ color: this.state.deleteDisabled ? 'gray' : 'red' }}>delete</i>
                                             </IconButton>
