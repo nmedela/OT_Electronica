@@ -8,11 +8,26 @@ class NewWorkOrder extends React.Component {
         super(props)
         this.state = {
             isLoading: true,
-            client: null,
+            client_id: null,
             workOrder: null,
             generate: false,
         }
-        this.refresh=this.refresh.bind(this)
+        this.refresh = this.refresh.bind(this)
+
+    }
+    componentWillMount() {
+        let client_id = this.props.match.params.client_id
+        if (client_id == ":client_id") {
+            // console.log("es igual")
+            this.props.history.push('/WO/new/-1')
+        }
+
+        if (client_id !== '-1' && client_id !== ":client_id") {
+            // console.log("supuestamente es distinto a -1", client_id)
+            this.setState({
+                client_id
+            })
+        }
 
     }
 
@@ -24,15 +39,16 @@ class NewWorkOrder extends React.Component {
     }
 
     handleSubmit = () => {
-        console.log("Apreté")
+        // console.log("Apreté")
         this.refresh()
     }
-    
+
     refresh = () => {
-        return window.location = '/#/WO'
+        this.props.history.push('/WO/')
+        // return window.location = '/#/WO'
     }
     handleChange = (event) => {
-        console.log('cambio')
+        // console.log('cambio')
     };
     render() {
         const styleRoot = {
@@ -45,7 +61,7 @@ class NewWorkOrder extends React.Component {
             <div>
                 <Grid container justify='center' style={styleRoot} spacing={2} >
                     <Grid item xs={12}>
-                        <FormWorkOrder new workOrder={this.state.workOrder} generateWorkOrder={this.handleGenerateWorkOrder} generate={this.state.generate} refresh={this.refresh}/>
+                        <FormWorkOrder new client_id={this.state.client_id} workOrder={this.state.workOrder} generateWorkOrder={this.handleGenerateWorkOrder} generate={this.state.generate} refresh={this.refresh} />
                     </Grid>
                 </Grid>
             </div>

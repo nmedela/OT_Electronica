@@ -13,9 +13,7 @@ import ListWorkOrder from './../utils/listWorkOrder'
 import Avatar from '@material-ui/core/Avatar';
 import clientRepository from './../../services/clientRepository'
 import Confirm from './../utils/confirm'
-import WoViewer from './../utils/woViewer'
-import FormWorkOrder from './../utils/formWorkOrder'
-
+import ClientViewer from './../utils/clientViewer'
 const styleRoot = {
     width: '100%',
     flexGrow: 1,
@@ -65,19 +63,21 @@ class Clients extends React.Component {
         })
     }
     handleChange = (event) => {
-        console.log('cambio')
+        // console.log('cambio')
     };
-    handleClick = ()=>{
+    handleClick = (client)=>{
         this.setState({
-            openWoViewer:true
+            selectedClient:client,
+            openClientViewer:true
         })
         return null
     }
-    handleCloseWoViewer=()=>{
+    handleCloseClientViewer=()=>{
         this.setState({
-            openWoViewer:false
+            openClientViewer:false
         })
     }
+    
     handleDelete = (client) => {
         console.log('apreté')
         this.setState({
@@ -89,7 +89,7 @@ class Clients extends React.Component {
     };
 
     handleConfirmDialog = (value) => {
-        console.log("entra handlcleose y devolvió ", value)
+        // console.log("entra handlcleose y devolvió ", value)
         this.setState({
             isLoading:true,
             openDialog: false,
@@ -114,36 +114,9 @@ class Clients extends React.Component {
         }
     }
     render() {
-
-        // if (this.state.isLoading || this.state.clients.length == 0) {
-
-        //     return (
-        //         <div>
-        //             <Paper style={stylePaper}>
-        //                 <Grid container justify='center' style={styleRoot} spacing={2} >
-        //                     <Grid item xs={12} sm={12}>
-        //                         <List dense>
-        //                             <ListItem button onClick={this.handleClick} style={{ marginTop: '20px' }}>
-        //                                 <ListItemAvatar>
-        //                                     <Avatar>
-        //                                         <i class="material-icons" > person </i>
-        //                                     </Avatar>
-        //                                 </ListItemAvatar>
-        //                                 <ListItemText
-        //                                     primary={`No se enuentran clientes`}
-        //                                 />
-        //                             </ListItem>
-        //                         </List>
-        //                     </Grid>
-        //                 </Grid>
-        //             </Paper>
-        //         </div>
-        //     )
-        // }
-
         return (
             <div>
-                <WoViewer open={this.state.openWoViewer} handleClose={this.handleCloseWoViewer}/>
+                <ClientViewer {...this.props} client={this.state.selectedClient} open={this.state.openClientViewer} handleClose={this.handleCloseClientViewer}/>
                 <Confirm open={this.state.openDialog} handleClose={this.state.actionDialog} message={this.state.messageDialog} />
                 <Paper style={stylePaper}>
                     <Grid container justify='center' style={styleRoot} spacing={2} >
@@ -161,7 +134,7 @@ class Clients extends React.Component {
                                 </ListItem>
                                 }
                                 {!this.state.isLoading && this.state.clients.map((client) => {
-                                    return (<ListItem button style={{ marginTop: '20px' }} onClick={this.handleClick}>
+                                    return (<ListItem button style={{ marginTop: '20px' }} onClick={()=>{this.handleClick(client)}}>
                                         <ListItemAvatar>
                                             <Avatar>
                                                 <i class="material-icons" > person </i>

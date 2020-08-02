@@ -36,10 +36,10 @@ class MyItem extends React.Component {
         this.refresh = this.refresh.bind(this)
     }
     componentWillMount() {
-        console.log(this.props.onWO.client_id)
+        // console.log(this.props.onWO.client_id)
         this.getClientName(this.props.onWO.client_id)
             .then((res) => {
-                console.log("esto tiene nombre ", res.data[0].name)
+                // console.log("esto tiene nombre ", res.data[0].name)
                 let client_name = res.data[0].name
                 this.setState({
                     client_name,
@@ -59,7 +59,7 @@ class MyItem extends React.Component {
         }
     }
     handleChange = (event) => {
-        console.log('cambio')
+        // console.log('cambio')
     };
     handleClickWoViewer = ()=>{
         this.setState({
@@ -133,7 +133,7 @@ class MyItem extends React.Component {
                     </ListItemAvatar>
                     {this.state.open ? <ExpandLess /> : <ExpandMore />}
                     <ListItemText
-                        primary={`${this.state.client_name} $${this.props.onWO.final_amount ? this.props.onWO.final_amount : '-'}`}
+                        primary={`${this.props.onWO.code} - ${this.state.client_name} $${this.props.onWO.final_amount ? this.props.onWO.final_amount : '-'}`}
                         secondary={`${equipment} ${this.props.onWO.brand} - ${this.props.onWO.failure}`}
                     />
                     <ListItemSecondaryAction>

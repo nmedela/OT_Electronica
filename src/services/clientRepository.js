@@ -48,12 +48,12 @@ class ClientRepository {
     }
 
     async getById(_id) {
-        console.log("Esto tiene el cliente id ", _id)
+        // console.log("Esto tiene el cliente id ", _id)
         return axios.get(`${config.url}:${config.port}/client/${_id}`)
         // return this.clients.find(client => client.id === _id)
     }
     async getNameById(_id) {
-        console.log("Esto tiene el cliente id ", _id)
+        // console.log("Esto tiene el cliente id ", _id)
         // let client = this.clients.find(client => client.id === _id)
         return axios.get(`${config.url}:${config.port}/client/${_id}`)
 

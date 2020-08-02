@@ -70,7 +70,7 @@ class FormWorkOrder extends React.Component {
             snackBarOpen: false,
             messageResult: null,
             openConfirm: false,
-            buttonText:'Generar'
+            buttonText: 'Generar'
 
         }
         // this.handleChange = this.handleChange.bind(this)
@@ -83,16 +83,23 @@ class FormWorkOrder extends React.Component {
     }
 
     componentWillMount() {
-        console.log("Esto tienen los states ", this.state)
+        // console.log("Esto tienen los states ", this.state)
         if (!this.props.new) {
-            this.setState({ isLoading: true, inProgress: true, buttonText:'Modificar' })
+            this.setState({ isLoading: true, inProgress: true, buttonText: 'Modificar' })
             this.getWorkOrder(this.props.id)
                 .then((res) => {
-                    console.log("esto trae la wo, ", res.data[0])
+                    // console.log("esto trae la wo, ", res.data[0])
                     this.setFields(res.data[0])
-                    console.log("inició", this.state)
+                    // console.log("inició", this.state)
                     this.setState({ new: false, isLoading: false, inProgress: false })
                 })
+        }
+        if (this.props.client_id) {
+            let wo = this.state.wo
+            wo.client_id = this.props.client_id
+            this.setState({
+                wo
+            })
         }
     }
 
@@ -100,27 +107,27 @@ class FormWorkOrder extends React.Component {
         return workOrderRepository.getById(id)
     }
     setFields = (wo) => {
-        console.log('Esto tiene el admission date ', moment(wo.admission_date, 'DD/MM/YYYY'))
+        // console.log('Esto tiene el admission date ', moment(wo.admission_date, 'DD/MM/YYYY'))
         this.setState({
             wo,
-            observation:wo.last_observation,
-            status_date: wo.deliver_date? moment(wo.deliver_date,'DD/MM/YYYY'): moment()
-       
+            observation: wo.last_observation,
+            status_date: wo.deliver_date ? moment(wo.deliver_date, 'DD/MM/YYYY') : moment()
+
         })
         return null
     }
     handleAdmissionDateChange = (date) => {
-        console.log(date)
+        // console.log(date)
         let wo = this.state.wo
         wo.admission_date = date
         this.setState({ wo })
     }
     handleStatusDateChange = (date) => {
-        console.log(date)
+        // console.log(date)
         this.setState({ status_date: date })
     }
     handleUpdateChange = (event) => {
-        console.log(event)
+        // console.log(event)
         this.setState({ update: event.target.checked })
     }
 
@@ -128,13 +135,13 @@ class FormWorkOrder extends React.Component {
         let wo = this.state.wo
         wo.equipment_id = event.target.value
         this.setState({ wo })
-        console.log('cambio a ', this.state.wo.equipment_id)
+        // console.log('cambio a ', this.state.wo.equipment_id)
     };
     handleStatusChange = (event) => {
         let wo = this.state.wo
         wo.last_status = event.target.value
         this.setState({ wo })
-        console.log(event)
+        // console.log(event)
     };
     handleInputChange = (value, name) => {
         let wo = this.state.wo
@@ -143,7 +150,7 @@ class FormWorkOrder extends React.Component {
             ...this.state,
             wo
         })
-        console.log('cambio ', name, value)
+        // console.log('cambio ', name, value)
     };
 
     handleObservationChange = (event) => {
@@ -169,8 +176,8 @@ class FormWorkOrder extends React.Component {
         })
     }
     insertWorkOrder = (client_id) => {
-      
-        console.log("Se generó este id de cliente ", client_id)
+
+        // console.log("Se generó este id de cliente ", client_id)
         //Aca debería hacer algo como llamar a la clase History y crearle los parametros
         let wo = this.state.wo
         wo.client_id = client_id
@@ -181,11 +188,11 @@ class FormWorkOrder extends React.Component {
             id_status: wo.last_status,
             observation: this.state.observation
         }
-        console.log("ingreso cliente ahora va por wo")
+        // console.log("ingreso cliente ahora va por wo")
         if (this.state.new) {
             workOrderRepository.create(wo, this.state.status_date)
                 .then((res) => {
-                    console.log("respondió esto ", res)
+                    // console.log("respondió esto ", res)
                     this.checkComplete(res)
                 })
         } else {
@@ -209,7 +216,7 @@ class FormWorkOrder extends React.Component {
             wo.id = res.data.insertId
             message = "Se ingresó correctamente"
         } else {
-            console.log(res)
+            // console.log(res)
             message = "Se modificó correctamente"
         }
 
@@ -237,7 +244,7 @@ class FormWorkOrder extends React.Component {
         this.refresh()
     }
     refresh = () => {
-        console.log("entre en refresh")
+        // console.log("entre en refresh")
         this.props.refresh()
     }
     render() {
@@ -307,7 +314,7 @@ class FormWorkOrder extends React.Component {
                             <DialogActions>
                                 <Button onClick={this.handleCloseToConfirm} color="primary">
                                     No          </Button>
-                                <Link to={`/lector/${this.state.wo.id}`} style={{ color: 'inherit', textDecoration:'none' }} >
+                                <Link to={`/lector/${this.state.wo.id}`} style={{ color: 'inherit', textDecoration: 'none' }} >
                                     <Button color="primary" autoFocus>
                                         Si
                                 </Button>
@@ -515,7 +522,7 @@ class FormWorkOrder extends React.Component {
                                         startIcon={<SaveIcon />}
                                     >
                                         {this.state.buttonText}
-                            </Button>
+                                    </Button>
                                 </Grid>
                             </Grid>
                             {/* </Paper> */}

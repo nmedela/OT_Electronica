@@ -37,12 +37,12 @@ class FormClient extends React.Component {
         //Se pasan las props new y id
         //Si existe new, se crean los campos vacios para poder agregar un cliente.
         //si no es new, se toma la props id, para buscarlo en la base y traer la info
-        if (!this.props.new) {
+        if (!this.props.new || this.props.id) {
             this.setState({ isLoading: true })
-            console.log("Le pido este id ", this.props.id)
+            // console.log("Le pido este id ", this.props.id)
             this.getClient(this.props.id)
             .then((res) => {
-                console.log("trae esta info el getById ", res.data)
+                // console.log("trae esta info el getById ", res.data)
                 this.setFieldsClient(res.data[0])
                 this.setState({ isLoading: false })
                 })
@@ -86,7 +86,7 @@ class FormClient extends React.Component {
         if (id === null) {
             this.insertClient()
                 .then((res) => {
-                    console.log("la insertada de cliente devuelve esto," ,res)
+                    // console.log("la insertada de cliente devuelve esto," ,res)
                     this.props.onClientInsert(res.data.insertId)
                 })
         } else {
@@ -122,7 +122,8 @@ class FormClient extends React.Component {
             width: '100%',
         }
         const { client } = this.state
-
+        let disabled= (!this.state.update && !this.props.new ) || (!!this.props.id && !this.state.update) 
+        // console.log("esto tiene disabled ",disabled)
         if (this.state.isLoading) {
             return (
                 <div style={styleRoot}>
@@ -144,7 +145,7 @@ class FormClient extends React.Component {
                                     name="name"
                                     value={client.name}
                                     onChange={this.handleTextChange}
-                                    disabled={!this.state.update && !this.props.new}
+                                    disabled={disabled}//{!this.state.update && !this.props.new}
                                     label="Señor/a"
                                     variant="outlined" />
                             </AccordionSummary>
@@ -163,7 +164,7 @@ class FormClient extends React.Component {
                                     name="tel"
                                     value={client.tel}
                                     onChange={this.handleTextChange}
-                                    disabled={!this.state.update && !this.props.new}
+                                    disabled={disabled}//{!this.state.update && !this.props.new}
                                     variant="outlined"
                                     type='number' />
                                      
@@ -176,7 +177,7 @@ class FormClient extends React.Component {
                                         name="tel2"
                                         value={client.tel2}
                                         onChange={this.handleTextChange}
-                                        disabled={!this.state.update && !this.props.new}
+                                        disabled={disabled}//{!this.state.update && !this.props.new}
                                         variant="outlined"
                                         type='number' />
                                 </AccordionDetails>
@@ -196,7 +197,7 @@ class FormClient extends React.Component {
                                         name="mail"
                                         value={client.mail}
                                         onChange={this.handleTextChange}
-                                        disabled={!this.state.update && !this.props.new}
+                                        disabled={disabled}//{!this.state.update && !this.props.new}
                                         variant="outlined" />
                                 </AccordionSummary>
                                 <AccordionDetails>
@@ -207,7 +208,7 @@ class FormClient extends React.Component {
                                         name="mail2"
                                         onChange={this.handleTextChange}
                                         value={client.mail2}
-                                        disabled={!this.state.update && !this.props.new}
+                                        disabled={disabled}//{!this.state.update && !this.props.new}
                                         variant="outlined" />
                                 </AccordionDetails>
                             </Accordion>
@@ -222,7 +223,7 @@ class FormClient extends React.Component {
                                 name="direction"
                                 onChange={this.handleTextChange}
                                 value={client.direction}
-                                disabled={!this.state.update && !this.props.new}
+                                disabled={disabled}//{!this.state.update && !this.props.new}
                                 variant="outlined" />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -233,15 +234,15 @@ class FormClient extends React.Component {
                                 name="location"
                                 onChange={this.handleTextChange}
                                 value={client.location}
-                                disabled={!this.state.update && !this.props.new}
+                                disabled={disabled}//{!this.state.update && !this.props.new}
                                 variant="outlined" />
                         </Grid>
-                        <Grid item xs={12} sm={3} style={{ display: this.props.new ? 'none' : 'inline-block' }}>
+                        <Grid item xs={12} sm={3} style={{ display: this.props.new && !this.props.id ? 'none' : 'inline-block' }}>
                             <InputLabel shrink id="lblUpdate">Editar</InputLabel>
                             <Switch
                                 checked={this.state.update}
                                 onChange={this.handleUpdateChange}
-                                disabled={this.props.new}
+                                disabled={this.props.new && !this.props.id}
                                 name="update"
                                 color="primary"
                             />

@@ -4,13 +4,14 @@ import Clients from './../pages/clients'
 import Movements from './../pages/movements'
 import Settings from './../pages/settings'
 import React from 'react'
+import { render } from '@testing-library/react'
 
 const newWO = {
     title: 'Nueva OT',
     icon: 'note_add',
     description: 'Crear nueva orden de trabajo',
-    path: '/WO/new',
-    component: <NewWorkOrder/>,
+    path: '/WO/new/:client_id',
+component: (props)=>{return <NewWorkOrder {...props} />},
     subMenu: [],
 }
 const workOrders = {
@@ -18,7 +19,7 @@ const workOrders = {
     icon: 'library_books',
     description: 'Visualizar ordenes de trabajo',
     path: '/WO',
-    component:  <WorkOrders/>,
+component: (props)=>{return <WorkOrders {...props}/>},
     subMenu: [],
 }
 const clients = {
@@ -26,7 +27,7 @@ const clients = {
     icon: 'people',
     description: 'Visualizar clientes, abm',
     path: '/clients',
-    component:  <Clients/>,
+component: (props)=>{return <Clients {...props} />},
     subMenu: [],
 }
 
@@ -35,7 +36,7 @@ const movements = {
     icon: 'multiple_stop',
     description: 'Visualizar movimientos, gastos, ganancias',
     path: '/movements',
-    component: <Movements/>,
+component: ()=>{return <Movements />},
     subMenu: [],
 }
 const configuration = {
@@ -43,17 +44,17 @@ const configuration = {
     icon: 'settings',
     description: 'Configurar datos de usuario, como items de ordenes de trabajo o cuestiones de dominio(?',
     path: '/settings',
-    component: <Settings/>,
-    subMenu: [],
+    component: (props) => {return <Settings {...props} />},
+        subMenu: [],
 }
 const logout = {
-    title: 'Cerrar sesión',
-    icon: 'close',
-    description: 'Cerrar sesión',
-    path: '/logout',
-    component:  <Settings/>,
-    subMenu: [],
-}
+        title: 'Cerrar sesión',
+        icon: 'close',
+        description: 'Cerrar sesión',
+        path: '/logout',
+component: () => {return <Settings />},
+        subMenu: [],
+    }
 
-export const itemsMenu = [newWO, workOrders,clients, movements, configuration, logout]
+export const itemsMenu = [newWO, workOrders, clients, movements, configuration, logout]
 

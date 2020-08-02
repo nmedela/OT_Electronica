@@ -19,7 +19,7 @@ class ListWorkOrders extends React.Component {
         this.refresh = this.refresh.bind(this)
     }
     componentWillMount() {
-        console.log("Esto tiene que haber en las props ", this.props)
+        // console.log("Esto tiene que haber en las props ", this.props)
         this.setState({
             workOrders: this.props.workOrders,
             isLoading: false
@@ -34,7 +34,7 @@ class ListWorkOrders extends React.Component {
         }
     }
     handleChange = (event) => {
-        console.log('cambio')
+        // console.log('cambio')
     };
     generate(element) {
         return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((value) =>

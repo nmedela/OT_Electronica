@@ -223,15 +223,15 @@ export default function PersistentDrawerLeft() {
             <Redirect
               exact
               from="/"
-              to="/WO/new" />
+              to="/WO/new/-1" />
             {
               itemsMenu.map((item) => {
                 return (
                   <Route key={item.title}
                     path={`${item.path}`}
-                    render={() => {
+                    render={(props) => {
                       setTitle(item.title)
-                      return item.component
+                      return item.component(props)
                     }} />
                 )
               })
@@ -241,15 +241,7 @@ export default function PersistentDrawerLeft() {
               render={(props) => {
                 return <PdfViewer
                   {...props}
-                  wo={{
-                    code: '123456',
-                    last_status: 'Entregado',
-                  }}
-                  client={{
-                    name: 'Nico',
-                    direction: 'guzman 3327',
-                    location: 'Ricardo Rojas'
-                  }} />
+                  />
               }} />
           </Switch>
 

@@ -50,7 +50,7 @@ class WorkOrders extends React.Component {
         //basica para mostrar en la list
         this.getWorkOrders()
             .then((res) => {
-                console.log("Esto trae el getWorkOrders",res.data)
+                // console.log("Esto trae el getWorkOrders",res.data)
                 this.setFields(res.data)
             })
     }
@@ -73,7 +73,7 @@ class WorkOrders extends React.Component {
         })
     }
     handleChange = (event) => {
-        console.log('cambio')
+        // console.log('cambio')
     };
     getWorkOrders = () => {
         return workOrderRepository.getAll()
@@ -90,7 +90,7 @@ class WorkOrders extends React.Component {
         })
         this.getWorkOrders()
             .then((res) => {
-                console.log("Esto trae el getWorkOrders",res.data)
+                // console.log("Esto trae el getWorkOrders",res.data)
                 this.setFields(res.data)
             })
     }

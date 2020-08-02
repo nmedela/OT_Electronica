@@ -121,12 +121,12 @@ class PdfViewer extends React.Component {
     componentWillMount() {
         //posiblemente le pase por url el id de la wo
         let id = this.props.match.params.id
-        console.log(this.props.match.params.id)
+        // console.log(this.props.match.params.id)
         workOrderRepository.getById(id)
             .then((res) => {
                 let wo = new WorkOrder()
                 wo = res.data[0]
-                console.log('esto tiene wo y es moment? ', wo)
+                // console.log('esto tiene wo y es moment? ', wo)
                 this.setState({
                     wo
                 })
@@ -134,12 +134,12 @@ class PdfViewer extends React.Component {
                     .then((res) => {
                         
                             let client = res.data[0]
-                            console.log(client)
+                            // console.log(client)
                             this.setState({
                                 client,
                                 isLoading: false
                             })
-                            console.log(this.state)
+                            // console.log(this.state)
                         
                     })
             })
@@ -149,10 +149,10 @@ class PdfViewer extends React.Component {
         // let equipmentName = equipments.find(s => s.id === wo.equipment).title
         // let statusName = status.find(s => s.id === wo.last_status).title
         if (isLoading) {
-            console.log("tiene esto los dos ", wo, client)
+            // console.log("tiene esto los dos ", wo, client)
             return <div>cargando</div>
         }
-        console.log("renderizo ", wo, client)
+        // console.log("renderizo ", wo, client)
         return (
             < PDFViewer style={{ width: '100%', height: '700px' }
             }>

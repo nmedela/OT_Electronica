@@ -80,6 +80,9 @@ class WorkOrderRepository {
     async getAll() {
         return axios.get(`${config.url}:${config.port}/wo/all`)
     }
+    async getWorkOrdersByClient(_id){
+        return axios.get(`${config.url}:${config.port}/wo/client_id/${_id}`)
+    }
     async delete(_id) {
         return axios.delete(`${config.url}:${config.port}/wo/delete/${_id}`)
 
