@@ -12,13 +12,24 @@ import { Link } from 'react-router-dom'
 import IconButton from '@material-ui/core/IconButton';
 import ListWorkOrder from './../utils/listWorkOrder'
 import workOrderRepository from './../../services/workOrderRepository'
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
-
+const useStyles = makeStyles({
+    root: {
+        width: '100%',
+        maxWidth: 500,
+    },
+    text:{
+        textDecoration:'none'
+    }
+});
 const styleRoot = {
     width: '100%',
     flexGrow: 1,
 }
 export default function ClientViewer(props) {
+    const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [workOrder, setWorkOrder] = React.useState([]);
     const [client, setClient] = React.useState(null);
@@ -28,29 +39,29 @@ export default function ClientViewer(props) {
     useEffect(() => {
         setClient(props.client)
         setOpen(props.open);
-        if(open && client && !WOs ){
+        if (open && client && !WOs) {
             // console.log("entra a buscar orders")
             getWorkOrders()
         }
-        if(!open){
+        if (!open) {
             // console.log("salio")
             setWOs(null)
         }
         // setMessage(props.message)
     })
 
-    const getWorkOrders=()=>{
+    const getWorkOrders = () => {
         workOrderRepository.getWorkOrdersByClient(props.client.id)
-        .then((res)=>{
-            setWOs(res.data)
-        })
+            .then((res) => {
+                setWOs(res.data)
+            })
     }
     const handleClose = (value) => {
         // setOpen(false)
         props.handleClose(value)
     };
-    const newWorkOrderForClient=()=>{
-        props.history.push('/WO/new/'+ client.id)
+    const newWorkOrderForClient = () => {
+        props.history.push('/WO/new/' + client.id)
     }
     const refresh = () => {
         getWorkOrders()
@@ -60,7 +71,7 @@ export default function ClientViewer(props) {
 
     return (
         <div>
-           
+
             <Dialog
                 open={open}
                 onClose={handleClose}
@@ -69,25 +80,34 @@ export default function ClientViewer(props) {
                 aria-describedby="alert-dialog-description"
                 maxWidth={'md'}
             >
-                <DialogTitle id="alert-dialog-title">{`Información de cliente`}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">{`Cliente ${client && client.name}`}</DialogTitle>
                 <DialogContent>
                     <Grid container justify='center' style={styleRoot} spacing={2} >
                         <Grid item xs={12}>
-                        <b>Nombre: </b> {client && client.name} -
+                            <Typography variant="subtitle2" gutterBottom >
+                                <b>Tel: </b>
+                                {client && <a className={classes.text} href={`tel:${client.tel}`}>{client.tel}</a>}
+                            </Typography>
+                            <Typography variant="subtitle2" gutterBottom>
+                                <b>Tel2: </b>
+                                {client && <a className={classes.text} href={`tel:${client.tel2}`}>{client && client.tel2}</a>}
+                            </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                         <b>Tel: </b> {client && <a href={`tel:${client.tel}`}>{client.tel}</a>} - <b>Tel2: </b> {client && <a href={`tel:${client.tel2}`}>{client && client.tel2}</a>}
-
-                        </Grid>
-                         <Grid item xs={12}>
-                         <b>Mail: </b> {client && <a href={`mailto:${client.mail}`}>{client.mail}</a>} - <b>Mail 2: </b> {client && <a href={`mailto:${client.mail2}`}>{client && client.mail2}</a>}
-                        </Grid>
-                        <Grid item xs={12}>
-                         <b>Dirección: </b> {client && <a target="_blank" href={`http://maps.google.com/?q=${client.direction} ${client.location}`}>{client.direction && client.direction}</a>} - {client && client.location}
-                            
+                            <Typography variant="subtitle2" gutterBottom>
+                                <b>Mail: </b> {client && <a className={classes.text} href={`mailto:${client.mail}`}>{client.mail}</a>}
+                            </Typography>
+                            <Typography variant="subtitle2" gutterBottom>
+                                <b>Mail 2: </b> {client && <a className={classes.text} href={`mailto:${client.mail2}`}>{client && client.mail2}</a>}
+                            </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                        {WOs && <ListWorkOrder refresh={refresh} workOrders={WOs} />}
+                            <Typography variant="subtitle2" gutterBottom>
+                            <b>Dirección: </b> {client && <a className={classes.text} target="_blank" href={`http://maps.google.com/?q=${client.direction} ${client.location}`}>{client.direction && client.direction} - {client && client.location}</a>}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            {WOs && <ListWorkOrder refresh={refresh} workOrders={WOs} />}
                         </Grid>
                     </Grid>
 

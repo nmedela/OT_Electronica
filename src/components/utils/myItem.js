@@ -133,13 +133,14 @@ class MyItem extends React.Component {
                     </ListItemAvatar>
                     {this.state.open ? <ExpandLess /> : <ExpandMore />}
                     <ListItemText
-                        primary={`${this.props.onWO.code} - ${this.state.client_name} $${this.props.onWO.final_amount ? this.props.onWO.final_amount : '-'}`}
-                        secondary={`${equipment} ${this.props.onWO.brand} - ${this.props.onWO.failure}`}
+                    style={{marginRight:'15px'}}
+                    primary={`${this.props.onWO.code} - ${this.state.client_name} $${this.props.onWO.final_amount ? this.props.onWO.final_amount : '-'}`}
+                    secondary={`${equipment} ${this.props.onWO.brand} - ${this.props.onWO.failure}`}
                     />
                     <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="delete">
+                        <IconButton  edge="end" aria-label="delete">
                             <Link to={`/lector/${this.props.onWO.id}`} style={{ color: 'gray' }} >
-                                <i class="material-icons">get_app</i>
+                                <i  class="material-icons">get_app</i>
                             </Link>
                         </IconButton>
                         <IconButton edge="end" aria-label="delete" onClick={this.deleteWO} disabled={this.state.deleteDisabled}>

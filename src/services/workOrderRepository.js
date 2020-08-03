@@ -80,12 +80,20 @@ class WorkOrderRepository {
     async getAll() {
         return axios.get(`${config.url}:${config.port}/wo/all`)
     }
-    async getWorkOrdersByClient(_id){
+    async getWorkOrdersByClient(_id) {
         return axios.get(`${config.url}:${config.port}/wo/client_id/${_id}`)
+    }
+    async getTotalMount() {
+        return axios.get(`${config.url}:${config.port}/wo/total_mount`)
+    }
+    async getTotalMountMonth(date) {
+        console.log("Hace el request")
+        return axios.get(`${config.url}:${config.port}/wo/total_mount_month/${date.month}/${date.year}`).then((res)=>{
+            console.log("devuelve esto, ", res)
+            return res})
     }
     async delete(_id) {
         return axios.delete(`${config.url}:${config.port}/wo/delete/${_id}`)
-
     }
 }
 

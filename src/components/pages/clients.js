@@ -140,7 +140,7 @@ class Clients extends React.Component {
                                                 <i class="material-icons" > person </i>
                                             </Avatar>
                                         </ListItemAvatar>
-                                        <ListItemText
+                                        <ListItemText  style={{marginRight:'20px'}}
                                             primary={`Sr/a: ${client.name} - tel: ${client.tel} - dirección: ${client.direction}`}
                                         />
                                         <ListItemSecondaryAction>
