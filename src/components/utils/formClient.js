@@ -43,8 +43,10 @@ class FormClient extends React.Component {
             this.getClient(this.props.id)
             .then((res) => {
                 // console.log("trae esta info el getById ", res.data)
-                this.setFieldsClient(res.data[0])
-                this.setState({ isLoading: false })
+               if(res){
+                   this.setFieldsClient(res.data[0])
+                   this.setState({ isLoading: false })
+               }
                 })
         }
     }

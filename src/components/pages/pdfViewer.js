@@ -124,15 +124,17 @@ class PdfViewer extends React.Component {
         // console.log(this.props.match.params.id)
         workOrderRepository.getById(id)
             .then((res) => {
-                let wo = new WorkOrder()
-                wo = res.data[0]
-                // console.log('esto tiene wo y es moment? ', wo)
-                this.setState({
-                    wo
-                })
-                clientRepository.getById(wo.client_id)
-                    .then((res) => {
-                        
+                if (res) {
+
+                    let wo = new WorkOrder()
+                    wo = res.data[0]
+                    // console.log('esto tiene wo y es moment? ', wo)
+                    this.setState({
+                        wo
+                    })
+                    clientRepository.getById(wo.client_id)
+                        .then((res) => {
+
                             let client = res.data[0]
                             // console.log(client)
                             this.setState({
@@ -140,8 +142,9 @@ class PdfViewer extends React.Component {
                                 isLoading: false
                             })
                             // console.log(this.state)
-                        
-                    })
+
+                        })
+                }
             })
     }
     render() {
@@ -180,7 +183,7 @@ class PdfViewer extends React.Component {
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Estado orden:</Text>
                                     {/* {wo.last_status !== null && <Text style={styles.valueText}>{wo.last_status}</Text>} */}
-                                    {wo.last_status !== null && <Text style={styles.valueText}>{ status.find(s => s.id === wo.last_status).title}</Text>}
+                                    {wo.last_status !== null && <Text style={styles.valueText}>{status.find(s => s.id === wo.last_status).title}</Text>}
                                 </View>
                                 <View style={styles.sectionRow}>
                                     <Text style={styles.itemText}> Fecha de Ingreso:</Text>

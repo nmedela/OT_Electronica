@@ -46,11 +46,13 @@ class Clients extends React.Component {
     }
     componentWillMount() {
         this.getClients().then((res) => {
-            let clients = res.data
-            this.setState({
-                clients,
-                isLoading: false
-            })
+            if(res){
+                let clients = res.data
+                this.setState({
+                    clients,
+                    isLoading: false
+                })
+            }
         })
     }
     getClients = () => {
@@ -122,7 +124,7 @@ class Clients extends React.Component {
                     <Grid container justify='center' style={styleRoot} spacing={2} >
                         <Grid item xs={12} sm={12}>
                             <List dense>
-                                {(this.state.isLoading || this.state.clients.length == 0) && <ListItem button onClick={this.handleClick} style={{ marginTop: '20px' }}>
+                                {(this.state.isLoading && (!this.state.clients && this.state.clients.length == 0)) && <ListItem button onClick={this.handleClick} style={{ marginTop: '20px' }}>
                                     <ListItemAvatar>
                                         <Avatar>
                                             <i class="material-icons" > person </i>
@@ -133,7 +135,7 @@ class Clients extends React.Component {
                                     />
                                 </ListItem>
                                 }
-                                {!this.state.isLoading && this.state.clients.map((client) => {
+                                {!this.state.isLoading && this.state.clients && this.state.clients.map((client) => {
                                     return (<ListItem button style={{ marginTop: '20px' }} onClick={()=>{this.handleClick(client)}}>
                                         <ListItemAvatar>
                                             <Avatar>

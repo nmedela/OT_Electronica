@@ -49,11 +49,14 @@ class EditClient extends React.Component {
     }
     componentWillMount() {
         this.getClient().then((res) => {
-            let client = res.data[0]
-            this.setState({
-                client,
-                isLoading: false
-            })
+            if(res){
+
+                let client = res.data[0]
+                this.setState({
+                    client,
+                    isLoading: false
+                })
+            }
         })
     }
     getClient = () => {

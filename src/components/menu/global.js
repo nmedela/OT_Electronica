@@ -21,6 +21,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { itemsMenu } from './itemsMenu';
 import PdfViewer from './../pages/pdfViewer'
 import EditClient from './../pages/editClient'
+import Login from './../pages/login'
 import { HashRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom'
 
 const drawerWidth = 240;
@@ -238,18 +239,25 @@ export default function PersistentDrawerLeft() {
               })
             }
             <Route
+              path='/login'
+              render={(props) => {
+                return <Login
+                  {...props}
+                />
+              }} />
+            <Route
               path='/lector/:id'
               render={(props) => {
                 return <PdfViewer
                   {...props}
-                  />
+                />
               }} />
             <Route
               path='/client/:id'
               render={(props) => {
                 return <EditClient
                   {...props}
-                  />
+                />
               }} />
           </Switch>
 

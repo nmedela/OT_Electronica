@@ -88,11 +88,14 @@ class FormWorkOrder extends React.Component {
             this.setState({ isLoading: true, inProgress: true, buttonText: 'Modificar' })
             this.getWorkOrder(this.props.id)
                 .then((res) => {
-                    // console.log("esto trae la wo, ", res.data[0])
-                    this.setFields(res.data[0])
-                    // console.log("inició", this.state)
-                    this.setState({ new: false, isLoading: false, inProgress: false })
-                })
+                    if(res){
+                        
+                        // console.log("esto trae la wo, ", res.data[0])
+                        this.setFields(res.data[0])
+                        // console.log("inició", this.state)
+                        this.setState({ new: false, isLoading: false, inProgress: false })
+                    }
+                    })
         }
         if (this.props.client_id) {
             let wo = this.state.wo

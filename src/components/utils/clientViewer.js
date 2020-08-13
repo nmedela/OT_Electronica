@@ -53,7 +53,9 @@ export default function ClientViewer(props) {
     const getWorkOrders = () => {
         workOrderRepository.getWorkOrdersByClient(props.client.id)
             .then((res) => {
-                setWOs(res.data)
+                if(res){
+                    setWOs(res.data)
+                }
             })
     }
     const handleClose = (value) => {

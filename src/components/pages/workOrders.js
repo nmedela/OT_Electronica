@@ -50,8 +50,10 @@ class WorkOrders extends React.Component {
         //basica para mostrar en la list
         this.getWorkOrders()
             .then((res) => {
-                // console.log("Esto trae el getWorkOrders",res.data)
-                this.setFields(res.data)
+                if(res){
+                    // console.log("Esto trae el getWorkOrders",res.data)
+                    this.setFields(res.data)
+                }
             })
     }
     resetFilter = () => {

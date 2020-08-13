@@ -39,15 +39,18 @@ class MyItem extends React.Component {
         // console.log(this.props.onWO.client_id)
         this.getClientName(this.props.onWO.client_id)
             .then((res) => {
-                // console.log("esto tiene nombre ", res.data[0].name)
-                let client_name = res.data[0].name
-                this.setState({
-                    client_name,
-                    isLoading: false,
-                    id: this.props.id,
-                    deleteDisabled: false
+                if(res){
+
+                    // console.log("esto tiene nombre ", res.data[0].name)
+                    let client_name = res.data[0].name
+                    this.setState({
+                        client_name,
+                        isLoading: false,
+                        id: this.props.id,
+                        deleteDisabled: false
+                    })
+                }
                 })
-            })
     }
     componentWillReceiveProps(props) {
         if (props.onWo) {
