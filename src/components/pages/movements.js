@@ -123,7 +123,11 @@ class Movements extends React.Component {
 
     }
     render() {
-
+        const styleTextField = {
+            marginTop: '16px',
+            marginLeft: '1px',
+            width: '100%',
+        }
         return (
             <div style={{ width: '100%' }}>
 
@@ -146,7 +150,7 @@ class Movements extends React.Component {
                             <Grid item xs={6} sm={1}>
                                 <InputLabel shrink id="lblFilterMonth">Mes</InputLabel>
                                 <Select
-                                    // style={styleTextField}
+                                    style={styleTextField}
                                     labelId="lblFilterMonth"
                                     name="filter_month"
                                     value={this.state.date.month}
@@ -165,7 +169,7 @@ class Movements extends React.Component {
                             <Grid item xs={6} sm={1}>
                                 <InputLabel shrink id="lblFilterYear">Año</InputLabel>
                                 <Select
-                                    // style={styleTextField}
+                                    style={styleTextField}
                                     labelId="lblFilterYear"
                                     name="filter_year"
                                     value={this.state.date.year}
@@ -182,17 +186,17 @@ class Movements extends React.Component {
                                 </Select>
 
                             </Grid>
-                            Agregar gasto
+                            {/* Agregar gasto */}
                         </Grid>
 
                         <Grid item xs={12} sm={12}>
                             <Grid
                                 container
-                                justify='flex-start'
-                                alignItems="flex-start"
+                                justify='center'
+                                alignItems="center"
                                 style={styleRoot}
                                 spacing={3}
-                                direction='row' >
+                                direction='column' >
                                 <Grid item xs={12} sm={3}>
                                     Total bruto anual: ${this.state.totalMount ? this.state.totalMount : 0}
                                 </Grid>
@@ -200,9 +204,9 @@ class Movements extends React.Component {
                                     Total bruto por mes: ${this.state.totalMountMonth ? this.state.totalMountMonth : 0}
                                 </Grid>
                             </Grid>
-                            tabla con movimientos en el Mes y año seleccionado
+                            {/* tabla con movimientos en el Mes y año seleccionado
                             <br />
-                            tabla con totales en por mes neto y bruto?
+                            tabla con totales en por mes neto y bruto? */}
                         </Grid>
                     </Grid>
                     }
