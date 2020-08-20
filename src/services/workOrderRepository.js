@@ -63,7 +63,7 @@ class WorkOrderRepository {
         )
     }
     async getTotalMount(date) {
-        return axios.get(`${config.url}:${config.port}/wo/total_mount//${date.year}`, { headers }).then(
+        return axios.get(`${config.url}:${config.port}/wo/total_mount/${date.year}`, { headers }).then(
             (res) => {
                 return this.check(res)
             }

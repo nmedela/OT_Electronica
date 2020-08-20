@@ -45,27 +45,27 @@ class Movements extends React.Component {
         let date = this.state.date
         date.month = moment(moment(), 'DD/MM/YYYY').month() + 1
         date.year = moment(moment(), 'DD/MM/YYYY').year()
-        this.getTotalMount(this.state.date)
+        this.getTotalMount(date)
             .then((res) => {
-                if(res){
+                if (res) {
 
                     let totalMount = res.data[0].total_mount
                     this.getTotalMountMonth(this.state.date)
-                    .then((res) => {
-                        let totalMountMonth = res.data[0].total_mount_month
-                        this.setState({
-                            totalMountMonth,
-                            totalMount,
-                            isLoading: false,
-                            date
+                        .then((res) => {
+                            let totalMountMonth = res.data[0].total_mount_month
+                            this.setState({
+                                totalMountMonth,
+                                totalMount,
+                                isLoading: false,
+                                date
+                            })
                         })
-                    })
                 }
             })
     }
 
-    getTotalMount() {
-        return workOrderRepository.getTotalMount()
+    getTotalMount(date) {
+        return workOrderRepository.getTotalMount(date)
     }
     getTotalMountMonth(date) {
         console.log("pido el getTotalMount")
@@ -107,13 +107,18 @@ class Movements extends React.Component {
             isLoading: true,
         })
         //falta llamar a total
-        this.getTotalMountMonth(date)
-            .then((res) => {
-                let totalMountMonth = res.data[0].total_mount_month
-                this.setState({
-                    totalMountMonth,
-                    isLoading: false,
-                })
+        this.getTotalMount(date)
+        .then((res) => {
+        let totalMount = res.data[0].total_mount
+                this.getTotalMountMonth(date)
+                    .then((res) => {
+                        let totalMountMonth = res.data[0].total_mount_month
+                        this.setState({
+                            totalMount,
+                            totalMountMonth,
+                            isLoading: false,
+                        })
+                    })
             })
 
     }
@@ -196,7 +201,7 @@ class Movements extends React.Component {
                                 </Grid>
                             </Grid>
                             tabla con movimientos en el Mes y año seleccionado
-                            <br/>
+                            <br />
                             tabla con totales en por mes neto y bruto?
                         </Grid>
                     </Grid>
