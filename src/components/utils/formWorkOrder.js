@@ -473,7 +473,7 @@ class FormWorkOrder extends React.Component {
                                     name='warranty'
                                     label="Garantia"
                                     handleBlur={this.handleInputChange}
-                                    disabled={wo.deliver_date && !this.state.update}
+                                    // disabled={wo.deliver_date && !this.state.update}
                                     value={wo.warranty}
                                     type='number'
                                     variant="outlined"
