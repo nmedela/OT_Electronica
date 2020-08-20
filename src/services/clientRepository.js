@@ -49,6 +49,14 @@ class ClientRepository {
             }
         )
     }
+    async getByFilter(filter){
+        filter.name= filter.name==""? null:filter.name
+        return axios.get(`${config.url}:${config.port}/client/filtered/${filter.name}`,{ headers }).then(
+            (res) => {
+                return this.check(res)
+            }
+        )
+    }
     async getNameById(_id) {
         return axios.get(`${config.url}:${config.port}/client/${_id}`, {
             headers

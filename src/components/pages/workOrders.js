@@ -37,9 +37,11 @@ class WorkOrders extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            filter_status: -1,
-            filter_date: moment.now(),
-            filter_search: "",
+            filter: {
+                last_status: -1,
+                deliver_date: moment.now(),
+                brand: '',
+            },
             workOrders: [],
             isLoading: true
         }
@@ -50,7 +52,7 @@ class WorkOrders extends React.Component {
         //basica para mostrar en la list
         this.getWorkOrders()
             .then((res) => {
-                if(res){
+                if (res) {
                     // console.log("Esto trae el getWorkOrders",res.data)
                     this.setFields(res.data)
                 }
@@ -60,9 +62,18 @@ class WorkOrders extends React.Component {
 
     }
     handleSearchChange = (event) => {
+        let filter = this.state.filter
+        filter.brand = event.target.value
+        // this.setState({
+        //     filter,
+        // })
+        // if (event.target.value.length >= 2) {
         this.setState({
-            filter_search: event.target.value
+            filter,
+            isLoading: true
         })
+        this.getWorkOrdersWithFilter(filter)
+        // }
     }
     handleDateChange = (date) => {
         this.setState({
@@ -70,10 +81,23 @@ class WorkOrders extends React.Component {
         })
     }
     handleStatusChange = (event) => {
+        let filter = this.state.filter
+        filter.last_status = event.target.value
         this.setState({
-            filter_status: event.target.value
+            filter,
+            isLoading: true
+        })
+        this.getWorkOrdersWithFilter(filter)
+    }
+    getWorkOrdersWithFilter = (filter) => {
+        return workOrderRepository.getByFilter(filter).then((res) => {
+            if (res) {
+                // console.log("Esto trae el getWorkOrders", res.data)
+                this.setFields(res.data)
+            }
         })
     }
+
     handleChange = (event) => {
         // console.log('cambio')
     };
@@ -97,22 +121,21 @@ class WorkOrders extends React.Component {
             })
     }
     render() {
-        if (this.state.isLoading) {
-            return (
-                <div>
-                  <LinearProgress/>
-                </div>
-            )
-        }
+        // if (this.state.isLoading) {
+        //     return (
+        //         <div>
+        //         </div>
+        //     )
+        // }
         return (
             <div>
                 <Paper style={stylePaper}>
                     <Grid container justify='center' style={styleRoot} spacing={2} >
                         {/* <Grid item xs={12} sm={4}>
                             <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale("es")}>
-                                <KeyboardDatePicker
-                                    margin="normal"
-                                    id="filter_date"
+                            <KeyboardDatePicker
+                            margin="normal"
+                            id="filter_date"
                                     label="Fecha"
                                     format="MM/yyyy"
                                     value={this.state.filter_date}
@@ -120,16 +143,16 @@ class WorkOrders extends React.Component {
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
                                     }}
-                                />
+                                    />
                             </MuiPickersUtilsProvider>
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs={12} sm={4}>
-                            <InputLabel shrink id="lblFilterStatus">Estado</InputLabel>
+                            <InputLabel shrink id="lblLastStatus">Estado</InputLabel>
                             <Select
                                 style={styleTextField}
-                                labelId="lblFilterStatus"
-                                name="filter_status"
-                                value={this.state.filter_status}
+                                labelId="lblLastStatus"
+                                name="last_status"
+                                value={this.state.filter.last_status}
                                 onChange={this.handleStatusChange}
                                 label="Estado"
                             >
@@ -147,13 +170,14 @@ class WorkOrders extends React.Component {
                                 style={styleTextField}
                                 id='filter_text'
                                 name='filter_text'
-                                label="Filtro"
+                                label="Marca"
                                 onChange={this.handleSearchChange}
-                                value={this.state.filter_search}
+                                value={this.state.filter.brand}
                                 variant="outlined" />
-                        </Grid> */}
+                        </Grid>
                         <Grid item xs={12}>
-                            <ListWorkOrder refresh={this.refresh} workOrders={this.state.workOrders} />
+                            {this.state.isLoading && <LinearProgress />}
+                            {!this.state.isLoading && <ListWorkOrder refresh={this.refresh} workOrders={this.state.workOrders} />}
                         </Grid>
                     </Grid>
                 </Paper>

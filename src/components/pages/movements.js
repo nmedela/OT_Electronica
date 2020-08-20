@@ -45,7 +45,7 @@ class Movements extends React.Component {
         let date = this.state.date
         date.month = moment(moment(), 'DD/MM/YYYY').month() + 1
         date.year = moment(moment(), 'DD/MM/YYYY').year()
-        this.getTotalMount()
+        this.getTotalMount(this.state.date)
             .then((res) => {
                 if(res){
 
@@ -106,6 +106,7 @@ class Movements extends React.Component {
             date,
             isLoading: true,
         })
+        //falta llamar a total
         this.getTotalMountMonth(date)
             .then((res) => {
                 let totalMountMonth = res.data[0].total_mount_month
