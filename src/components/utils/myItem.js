@@ -30,27 +30,37 @@ class MyItem extends React.Component {
             actionDialog: () => { return null },
             open: false,
             isLoading: true,
-            openWoViewer:false,
+            openWoViewer: false,
 
         }
         this.refresh = this.refresh.bind(this)
     }
     componentWillMount() {
         // console.log(this.props.onWO.client_id)
-        this.getClientName(this.props.onWO.client_id)
-            .then((res) => {
-                if(res){
+        // this.getClientName(this.props.onWO.client_id)
+        //     .then((res) => {
+        //         if(res){
 
-                    // console.log("esto tiene nombre ", res.data[0].name)
-                    let client_name = res.data[0].name
-                    this.setState({
-                        client_name,
-                        isLoading: false,
-                        id: this.props.id,
-                        deleteDisabled: false
-                    })
-                }
-                })
+        //             // console.log("esto tiene nombre ", res.data[0].name)
+        //             let client_name = res.data[0].name
+        //             this.setState({
+        //                 client_name,
+        //                 isLoading: false,
+        //                 id: this.props.id,
+        //                 deleteDisabled: false
+        //             })
+        //         }
+        //         })
+
+        ////////// opcion si llamado a cliente
+        this.setState({
+            client_name: this.props.onWO.client_name,
+            isLoading: false,
+            id: this.props.id,
+            deleteDisabled: false
+        })
+
+
     }
     componentWillReceiveProps(props) {
         if (props.onWo) {
@@ -64,15 +74,15 @@ class MyItem extends React.Component {
     handleChange = (event) => {
         // console.log('cambio')
     };
-    handleClickWoViewer = ()=>{
+    handleClickWoViewer = () => {
         this.setState({
-            openWoViewer:true,
+            openWoViewer: true,
         })
         return null
     }
-    handleCloseWoViewer=()=>{
+    handleCloseWoViewer = () => {
         this.setState({
-            openWoViewer:false,
+            openWoViewer: false,
         })
     }
     handleClick = () => {
@@ -95,7 +105,7 @@ class MyItem extends React.Component {
             actionDialog: (value) => {
                 if (value) {
                     this.setState({
-                        isLoading:true,
+                        isLoading: true,
                         deleteDisabled: true
                     })
                     workOrderRepository.delete(this.props.onWO.id).then((res) => {
@@ -136,14 +146,14 @@ class MyItem extends React.Component {
                     </ListItemAvatar>
                     {this.state.open ? <ExpandLess /> : <ExpandMore />}
                     <ListItemText
-                    style={{marginRight:'15px'}}
-                    primary={`${this.props.onWO.code} - ${this.state.client_name} $${this.props.onWO.final_amount ? this.props.onWO.final_amount : '-'}`}
-                    secondary={`${equipment} ${this.props.onWO.brand} - ${this.props.onWO.failure}`}
+                        style={{ marginRight: '15px' }}
+                        primary={`${this.props.onWO.code} - ${this.state.client_name} $${this.props.onWO.final_amount ? this.props.onWO.final_amount : '-'}`}
+                        secondary={`${equipment} ${this.props.onWO.brand} - ${this.props.onWO.failure}`}
                     />
                     <ListItemSecondaryAction>
-                        <IconButton  edge="end" aria-label="delete">
+                        <IconButton edge="end" aria-label="delete">
                             <Link to={`/lector/${this.props.onWO.id}`} style={{ color: 'gray' }} >
-                                <i  class="material-icons">get_app</i>
+                                <i class="material-icons">get_app</i>
                             </Link>
                         </IconButton>
                         <IconButton edge="end" aria-label="delete" onClick={this.deleteWO} disabled={this.state.deleteDisabled}>
