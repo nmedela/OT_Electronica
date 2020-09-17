@@ -127,7 +127,7 @@ class PdfViewer extends React.Component {
                 if (res) {
 
                     let wo = new WorkOrder()
-                    wo = res.data[0]
+                    wo = res.data.result[0]
                     // console.log('esto tiene wo y es moment? ', wo)
                     this.setState({
                         wo

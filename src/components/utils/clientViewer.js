@@ -54,7 +54,7 @@ export default function ClientViewer(props) {
         workOrderRepository.getWorkOrdersByClient(props.client.id)
             .then((res) => {
                 if(res){
-                    setWOs(res.data)
+                    setWOs(res.data.result)
                 }
             })
     }

@@ -18,10 +18,15 @@ export default function Confirm(props) {
     const handleClose = (value) => {
         props.handleClose(value)
     };
+    const handleConfirm = (value) => {
+        handleClose(value)
+    };
 
     return (
         <div>
             <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
@@ -37,7 +42,7 @@ export default function Confirm(props) {
                     <Button onClick={() => handleClose(false)} color="primary">
                         Cancelar
           </Button>
-                    <Button onClick={() => handleClose(true)} color="primary" autoFocus>
+                    <Button onClick={() => handleConfirm(true)} color="primary" autoFocus>
                         Aceptar
           </Button>
                 </DialogActions>

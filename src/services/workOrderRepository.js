@@ -40,16 +40,16 @@ class WorkOrderRepository {
             }
         )
     }
-    async getAll() {
-        return axios.get(`${config.url}:${config.port}/wo/all`, { headers }).then(
+    async getAll(pagination) {
+        return axios.get(`${config.url}:${config.port}/wo/all`, { headers, params: { page: pagination.page - 1, limit: pagination.limit } }).then(
             (res) => {
                 return this.check(res)
             }
         )
     }
-    async getByFilter(filter) {
-        filter.brand= filter.brand==""? null:filter.brand
-        return axios.get(`${config.url}:${config.port}/wo/filtered/${filter.last_status}/${filter.brand}`,{ headers }).then(
+    async getByFilter(filter, pagination) {
+        filter.brand = filter.brand == "" ? null : filter.brand
+        return axios.get(`${config.url}:${config.port}/wo/filtered/${filter.last_status}/${filter.brand}`, { headers, params: { page: pagination.page - 1, limit: pagination.limit } }).then(
             (res) => {
                 return this.check(res)
             }

@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import Pagination from '@material-ui/lab/Pagination';
 import ListWorkOrder from './../utils/listWorkOrder'
 import MomentUtils from '@date-io/moment';
 import Select from '@material-ui/core/Select';
@@ -16,6 +17,7 @@ import {
 } from '@material-ui/pickers';
 import workOrderRepository from './../../services/workOrderRepository'
 import LinearProgress from '@material-ui/core/LinearProgress';
+import { isThisHour } from 'date-fns';
 
 const statusList = [{ id: -1, title: "Todos" }, ...status]
 const styleTextField = {
@@ -42,6 +44,11 @@ class WorkOrders extends React.Component {
                 deliver_date: moment.now(),
                 brand: '',
             },
+            pagination: {
+                page: 1,
+                limit: 10,
+            },
+            totalWorkOrders: 0,
             workOrders: [],
             isLoading: true
         }
@@ -54,7 +61,10 @@ class WorkOrders extends React.Component {
             .then((res) => {
                 if (res) {
                     // console.log("Esto trae el getWorkOrders",res.data)
-                    this.setFields(res.data)
+                    this.setState({
+                        totalWorkOrders: res.data.pagination.total
+                    })
+                    this.setFields(res.data.result)
                 }
             })
     }
@@ -62,6 +72,8 @@ class WorkOrders extends React.Component {
 
     }
     handleSearchChange = (event) => {
+        let pagination = this.state.pagination
+        pagination.page=1
         let filter = this.state.filter
         filter.brand = event.target.value
         // this.setState({
@@ -69,6 +81,7 @@ class WorkOrders extends React.Component {
         // })
         // if (event.target.value.length >= 2) {
         this.setState({
+            pagination,
             filter,
             isLoading: true
         })
@@ -81,19 +94,27 @@ class WorkOrders extends React.Component {
         })
     }
     handleStatusChange = (event) => {
+        let pagination = this.state.pagination
         let filter = this.state.filter
+        pagination.page=1
         filter.last_status = event.target.value
+
         this.setState({
+            pagination,
             filter,
             isLoading: true
         })
         this.getWorkOrdersWithFilter(filter)
     }
     getWorkOrdersWithFilter = (filter) => {
-        return workOrderRepository.getByFilter(filter).then((res) => {
+        let pagination = this.state.pagination
+        return workOrderRepository.getByFilter(filter, this.state.pagination).then((res) => {
             if (res) {
                 // console.log("Esto trae el getWorkOrders", res.data)
-                this.setFields(res.data)
+                this.setState({
+                    totalWorkOrders: res.data.pagination.total
+                })
+                this.setFields(res.data.result)
             }
         })
     }
@@ -102,7 +123,8 @@ class WorkOrders extends React.Component {
         // console.log('cambio')
     };
     getWorkOrders = () => {
-        return workOrderRepository.getAll()
+        let pagination = this.state.pagination
+        return workOrderRepository.getAll(this.state.pagination)
     }
     setFields = (workOrders) => {
         this.setState({
@@ -114,12 +136,30 @@ class WorkOrders extends React.Component {
         this.setState({
             isLoading: true,
         })
-        this.getWorkOrders()
-            .then((res) => {
-                // console.log("Esto trae el getWorkOrders",res.data)
-                this.setFields(res.data)
-            })
+        if (this.state.filter.last_status !== -1 || this.state.filter.brand !== '') {
+            this.getWorkOrdersWithFilter(this.state.filter)
+        } else {
+            this.getWorkOrders()
+                .then((res) => this.resolveRequest(res))
+        }
     }
+
+    resolveRequest = (res) => {
+        this.setState({
+            totalWorkOrders: res.data.pagination.total
+        })
+        this.setFields(res.data.result)
+    }
+
+    handleChangePage = (event, value) => {
+        let pagination = this.state.pagination
+        pagination.page = value
+        this.setState({
+            pagination
+        })
+        this.refresh()
+    }
+
     render() {
         // if (this.state.isLoading) {
         //     return (
@@ -160,9 +200,9 @@ class WorkOrders extends React.Component {
                                 {statusList.map((status) =>
                                     (
                                         <MenuItem key={status.id} value={status.id} >{status.title}</MenuItem>
-                                    )
-
-                                )}
+                                        )
+                                        
+                                        )}
                             </Select>
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -177,7 +217,19 @@ class WorkOrders extends React.Component {
                         </Grid>
                         <Grid item xs={12}>
                             {this.state.isLoading && <LinearProgress />}
-                            {!this.state.isLoading && <ListWorkOrder refresh={this.refresh} workOrders={this.state.workOrders} />}
+                            {!this.state.isLoading &&
+                                <div>
+                                    <ListWorkOrder refresh={this.refresh} workOrders={this.state.workOrders} />
+                                </div>
+                            }
+                        </Grid>
+                        <Grid item xs={12} sm={5}>
+                        </Grid>
+                        <Grid item xs={12} sm={5}>
+                            <Pagination count={Math.ceil(this.state.totalWorkOrders / this.state.pagination.limit)} page={this.state.pagination.page} onChange={this.handleChangePage} />
+                        </Grid>
+                        <Grid item xs={12} sm={2}>
+                            {'Total:' + this.state.totalWorkOrders}
                         </Grid>
                     </Grid>
                 </Paper>

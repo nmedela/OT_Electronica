@@ -91,7 +91,7 @@ class FormWorkOrder extends React.Component {
                     if(res){
                         
                         // console.log("esto trae la wo, ", res.data[0])
-                        this.setFields(res.data[0])
+                        this.setFields(res.data.result[0])
                         // console.log("inició", this.state)
                         this.setState({ new: false, isLoading: false, inProgress: false })
                     }
