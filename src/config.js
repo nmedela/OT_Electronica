@@ -1,4 +1,4 @@
-const modeTest = true
+const modeTest = false
 
 const config = {
     url: modeTest ? 'http://192.168.0.38' : 'http://otelectronicabuenosaires.duckdns.org',

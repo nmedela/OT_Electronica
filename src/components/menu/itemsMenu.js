@@ -64,5 +64,5 @@ const logout = {
     subMenu: [],
 }
 
-export const itemsMenu = [newWO, workOrders, clients, movements, configuration, logout]
+export const itemsMenu = [newWO, workOrders, clients, movements, logout]
 

@@ -75,6 +75,13 @@ class WorkOrderRepository {
             return this.check(res)
         })
     }
+
+    async getListMovements(date,pagination) {
+        console.log("Hace el request de list movements")
+        return axios.get(`${config.url}:${config.port}/wo/list_movements/${date.month}/${date.year}`, { headers, params: { page: pagination.page, limit: pagination.limit } }).then((res) => {
+            return this.check(res)
+        })
+    }
     async delete(_id) {
         return axios.delete(`${config.url}:${config.port}/wo/delete/${_id}`, { headers }).then(
             (res) => {
